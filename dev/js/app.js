@@ -1,3 +1,3 @@
-function test(){
-    console.log("test");
-}
+function toggleNavbar(){
+    $("#navbar").toggle("slide", 300);
+};

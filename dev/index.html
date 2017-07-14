@@ -1,18 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title></title>
 
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <script src="https://use.fontawesome.com/139a6099b5.js"></script>
     <!-- inject:css -->
     <link rel="stylesheet" href="css/style.css">
     <!-- endinject -->
 </head>
 <body>
 
+    
+    <div id="navbar" class="navbar">
+        <div class="navbar-hdr flex-container">
+            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="title flex-item">Neighborhood Map</h3>
+        </div>
+        <div class="line-break"></div>
+        <div class="navbar-content">
+            <p>Text text text</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <button id="toggle-navbar" class="open" onclick="toggleNavbar()"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
 
 
-<!-- inject:js -->
-<script src="js/app.js"></script>
-<!-- endinject -->
+
+
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- inject:js -->
+    <script src="js/app.js"></script>
+    <!-- endinject -->
 </body>
 </html>
