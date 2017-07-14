@@ -1,3 +1,15 @@
+/*
+Colors:
+
+blue: 3E92CC
+off-white: EAFCF3
+pink: CEB5A7
+tan: C6C5B9
+brown: A17C6B
+
+*/
+
+
 body,
 html {
     height: 100%;
@@ -13,6 +25,8 @@ html {
     height: 100%;
     float: left;
     box-shadow: 0 -0 24px rgba(0,0,0,0.5);
+    background-color: #3E92CC;
+    color: #E0F2E9;
 }
 
 .navbar-hdr {
@@ -21,8 +35,12 @@ html {
     align-items: center;
 }
 
-.navbar-content {
+.navbar-menu-item {
     padding-left: 20px;
+}
+
+.navbar-menu-hdr {
+    text-align: center;
 }
 
 .title {
@@ -37,9 +55,14 @@ html {
     display: flex;
 }
 
+.navbar-link {
+    text-decoration: none;
+    color: #E0F2E9;
+}
+
 .line-break {
     height: 1px;
-    background-color: #E0E0E0;
+    background-color: #E0F2E9;
 }
 
 #toggle-navbar {
