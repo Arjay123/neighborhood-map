@@ -13,10 +13,9 @@ gulp.task('html', function(){
 });
 
 gulp.task('python', function(){
-    return gulp.src('dev/app.py')
+    return gulp.src(['dev/app.py', 'dev/yelp_auth.json'])
         .pipe(gulp.dest('prod/'))
 })
-
 
 
 gulp.task('scripts', function(){
