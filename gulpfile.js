@@ -12,7 +12,7 @@ gulp.task('html', function(){
 });
 
 gulp.task('scripts', function(){
-    return gulp.src('dev/js/*.js')
+    return gulp.src(['!dev/js/keys.js', 'dev/js/*.js'])
         .pipe(rename({suffix: '.min'}))
         .pipe(uglify())
         .pipe(gulp.dest('prod/js'));
