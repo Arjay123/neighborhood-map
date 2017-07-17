@@ -1,3 +1,4 @@
 node_modules
 .DS_Store
 */js/keys.js
+*/yelp_auth.json

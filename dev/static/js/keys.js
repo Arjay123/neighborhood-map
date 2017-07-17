@@ -1,0 +1,4 @@
+var keys = {
+    CLIENT_ID: "kPuE2LrVTUv5F9bQgA6JkA",
+    CLIENT_SECRET: "y58OTVIwiCgUZ7pyR1weRIfMfTRYTGqLLpcqekBwoeDR6izApK9NnKv20PJdZnfG"
+};

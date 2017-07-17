@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title></title>
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <script src="https://use.fontawesome.com/139a6099b5.js"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.min.css')}}">
+</head>
+<body>
+
+    
+    <div id="navbar" class="navbar">
+        <div class="navbar-hdr flex-container">
+            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="title flex-item">Neighborhood Map</h3>
+        </div>
+        <div class="line-break"></div>
+        <div class="navbar-content">
+            <div class="navbar-menu-item">
+                <h4><a class="navbar-link" href="#">Favorites</a></h4>
+            </div>
+            <div class="line-break"></div>
+            <div class="navbar-menu-hdr">
+                <h4>Categories</h4>
+            </div>
+            <div class="navbar-menu-item">
+                <h4><a class="navbar-link" href="#">Category 1</a></h4>
+            </div>
+            <div class="navbar-menu-item">
+                <h4><a class="navbar-link" href="#">Category 1</a></h4>
+            </div>
+            <div class="navbar-menu-item">
+                <h4><a class="navbar-link" href="#">Category 1</a></h4>
+            </div>
+            <div class="navbar-menu-item">
+                <h4><a class="navbar-link" href="#">Category 1</a></h4>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="content">
+        <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
+
+
+
+
+    </div>
+
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{{url_for('static', filename='js/app.min.js')}}"></script>
+    
+</body>
+</html>
