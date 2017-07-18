@@ -1,25 +1,51 @@
 function ViewModel(categories){
     var self = this;
     self.categories = categories;
+    self.restaurant_list = ko.observableArray();
+    self.selected_view = ko.observable("categories");
+
     // console.log(Object.keys(self.categories));
     self.category_list = ko.observableArray(Object.keys(self.categories));
 
     console.log(self.category_list());
 
-    self.toggleNavbar = function(element, e2){
+    self.toggleNavbar = function(){
         $("#navbar").toggle("slide", 300);
-        console.log(self.test)
-    }
+    };
+
+    self.cat_clicked = function(element){
+        console.log(element);
+        console.log(self.categories[element]);
+
+        $.ajax("/yelp?category=" + self.categories[element], {
+            success: function(response, status, test){
+                console.log(response);
+                response = $.parseJSON(response);
+                for(index in response["businesses"]){
+                    var curr = response["businesses"][index]
+                    var restaurant = {
+                        "name": curr["name"],
+                        "price": curr["price"],
+                        "category": curr["categories"][0]["title"],
+                        "rating": curr["rating"],
+                    };
+
+                    self.restaurant_list.push(restaurant);
+                };
+                console.log(self.restaurant_list());
+                self.selected_view("restaurants");
+            }
+        });
+    };
+
+    self.restaurant_clicked = function(element){
+        console.log(element);
+    };
 };
 
 // ko.applyBindings(new ViewModel());
 
-$.ajax("/yelp", {
-    success: function(data, status){
-        console.log(data);
-        console.log(status);
-    }
-});
+
 
 $.ajax("/categories", {
     success: function(data, status){

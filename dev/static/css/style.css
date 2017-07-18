@@ -52,6 +52,44 @@ html {
     padding-left: 20px;
 }
 
+.restaurant-menu-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.restaurant-img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.restaurant-name {
+    margin-top: 0;
+    margin-bottom: 3px;
+}
+
+.restaurant-controls {
+    /*text-align: right;*/
+    /*flex: 1;*/
+    /*width: 100%;*/
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.address {
+    margin: 0;
+}
+
+.restaurant {
+    display: flex;
+    width: 100%;
+}
+
+.restaurant-details {
+    /*width: 100%;*/
+    padding-left: 10px;
+}
+
 .navbar-menu-hdr {
     text-align: center;
 }

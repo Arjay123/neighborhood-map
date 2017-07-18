@@ -4,6 +4,7 @@ import requests
 from flask import Flask
 from flask import render_template
 from flask import url_for
+from flask import request
 
 app = Flask(__name__)
 
@@ -22,11 +23,23 @@ def index():
 
 @app.route("/yelp")
 def yelp_api():
+
+    category = request.args.get('category', None)
+
+    print(category)
+    print("testing")
+    print("")
+    print("")
+
+    if not category:
+        return "No category selected"
+
     endpoint = "https://api.yelp.com/v3/businesses/search"
-    query = "location=San Jose"
+    query = "location=San Jose&categories=%s" % str(category)
 
     r = requests.get(endpoint + "?" + query, 
         headers={'Authorization': 'bearer %s' % YELP_API_KEY})
+    print("test")
 
     return r.text
 
