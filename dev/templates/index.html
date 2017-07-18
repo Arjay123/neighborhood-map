@@ -30,17 +30,10 @@
             <div class="navbar-menu-hdr">
                 <h4>Categories</h4>
             </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
+            <div class="navbar-menu-items" data-bind="foreach: category_list">
+                <div class="navbar-menu-item">
+                    <h4><a class="navbar-link" href="#" data-bind="text: $data"></a></h4>
+                </div>
             </div>
 
         </div>
