@@ -32,6 +32,12 @@ function ViewModel(categories){
         $("#navbar").toggle("slide", 300);
     };
 
+    self.toggleHalf = function(){
+        $("#navbar-half").toggle("slide", "down", 300)
+        $("#favorites").css("height", "100%");
+        $("#navbar-half").css("height", "0");
+    }
+
     self.cat_clicked = function(element){
         console.log(element);
         console.log(self.categories[element]);

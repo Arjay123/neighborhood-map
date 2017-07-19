@@ -23,11 +23,31 @@
         </div>
         <div class="line-break"></div>
         <div class="navbar-content" id="navbar-scroll-div">
-            <div class="navbar-menu-hdr">
-                <h4><a class="navbar-link" href="#">Favorites</a></h4>
+            <div class="favorites">
+                <div class="navbar-menu-hdr">
+                    <h4><a class="navbar-link" href="#">Favorites</a></h4>
+                </div>
+                <div class="navbar-menu-items">
+                    <div class="navbar-menu-item restaurant-menu-item">
+                        <div class="restaurant" >
+                            <img class="restaurant-img" src="http://placehold.it/80/80">
+                            <div class="restaurant-details" >
+                                <h4 class="restaurant-name">Restaurant name</h4>
+                                <div data-bind="template: { name: rating_5 }"></div>
+                                <p class="address"><span>$</span> • <span>Bakery</span></p>
+                            </div>             
+                        </div>
+                        <div class="restaurant-controls">
+                            <a class="navbar-link ctrl-link" href="#"><i class="fa fa-heart" aria-hidden="true"></i> Favorite</a>
+                            <a class="navbar-link ctrl-link yelp-link" href="#"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
+                        </div>
+                    </div>
+                    <div class="line-break-partial"></div>
+                </div>
+                <button class="fav-expand-button" data-bind="click: toggleHalf"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
             </div>
             <div class="line-break"></div>
-            <div class="navbar-template" data-bind="template: { name: selected_view }">
+            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view }">
 
             </div>
         </div>
@@ -54,9 +74,9 @@
         </div>
         <div class="navbar-menu-items" data-bind="foreach: restaurant_list">
             <div class="navbar-menu-item restaurant-menu-item">
-                <div class="restaurant">
+                <div class="restaurant" data-bind="click: $parent.restaurant_clicked">
                     <img class="restaurant-img" data-bind="attr: { src: img }">
-                    <div class="restaurant-details" data-bind="click: $parent.restaurant_clicked">
+                    <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
                         <div data-bind="template: { name: get_rating_template }"></div>
                         <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
@@ -64,7 +84,7 @@
                 </div>
                 <div class="restaurant-controls">
                     <a class="navbar-link ctrl-link" href="#"><i class="fa fa-heart" aria-hidden="true"></i> Favorite</a>
-                    <a class="navbar-link ctrl-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
+                    <a class="navbar-link ctrl-link yelp-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                 </div>
             </div>
             <div class="line-break-partial"></div>
