@@ -22,6 +22,7 @@ function ViewModel(categories){
     self.categories = categories;
     self.restaurant_list = ko.observableArray();
     self.selected_view = ko.observable("categories");
+    self.fav_shown = false;
 
     // console.log(Object.keys(self.categories));
     self.category_list = ko.observableArray(Object.keys(self.categories));
@@ -69,7 +70,33 @@ function ViewModel(categories){
     self.get_star_img = function(rating){
         console.log(rating);
         return "{{url_for('static', filename='img/small_1.png')}}";
-    }
+    };
+
+    self.fav_click = function(element){
+
+        $("#favorites").slideToggle();
+        if(!self.fav_shown)
+            $('#drop-icon').addClass('fa-angle-double-up').removeClass('fa-angle-double-down');
+        else
+            $('#drop-icon').addClass('fa-angle-double-down').removeClass('fa-angle-double-up');
+        // if(self.fav_shown){
+
+        //     $("#navbar-half").css("height", "100%");
+        //     $("#favorites").css("height", "0%");
+        //     $("#favorites").css("display", "none");
+        //     $("#navbar-half").css("display", "block");
+        // }
+        // else {
+
+        //     $("#navbar-half").css("height", "0%");
+        //     $("#favorites").css("height", "100%");
+        //     $("#favorites").css("display", "block");
+        //     $("#navbar-half").css("display", "none");
+        // }
+
+        self.fav_shown = !self.fav_shown;
+        
+    };
 };
 
 // ko.applyBindings(new ViewModel());

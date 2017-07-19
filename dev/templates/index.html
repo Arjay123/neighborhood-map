@@ -23,11 +23,27 @@
         </div>
         <div class="line-break"></div>
         <div class="navbar-content" id="navbar-scroll-div">
-            <div class="navbar-menu-hdr">
-                <h4><a class="navbar-link" href="#">Favorites</a></h4>
+            <div class="navbar-hdr flex-container" data-bind="click: fav_click">
+                <i id="drop-icon" class="fa fa-angle-double-down fa-2x" aria-hidden="true"></i><h3 class="flex-item text-center"> Favorites</h3>
+            </div>
+            <div id="favorites">
+                <div class="navbar-menu-item restaurant-menu-item">
+                    <div class="restaurant">
+                        <img class="restaurant-img" src="http://placehold.it/80/80">
+                        <div class="restaurant-details" ">
+                            <h4 class="restaurant-name" >Restaurant name</h4>
+                            <div data-bind="template: { name: rating_5 }"></div>
+                            <p class="address"><span >$</span> • <span >Bakery</span></p>
+                        </div>             
+                    </div>
+                    <div class="restaurant-controls">
+                        <a class="navbar-link ctrl-link" href="#"><i class="fa fa-heart" aria-hidden="true"></i> Favorite</a>
+                        <a class="navbar-link ctrl-link" href="#"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
+                    </div>
+                </div>
             </div>
             <div class="line-break"></div>
-            <div class="navbar-template" data-bind="template: { name: selected_view }">
+            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view }">
 
             </div>
         </div>

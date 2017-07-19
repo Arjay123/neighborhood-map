@@ -111,6 +111,14 @@ html {
     text-align: center;
 }
 
+#favorites {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
 .title {
     text-align: center;
 }
@@ -121,6 +129,7 @@ html {
 
 .flex-container {
     display: flex;
+    align-items: center;
 }
 
 .navbar-link {
