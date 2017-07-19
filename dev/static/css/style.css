@@ -45,7 +45,7 @@ html {
 }
 
 .navbar-menu-items {
-    padding-bottom: 30px;
+    padding-bottom: 50px;
 }
 
 .navbar-menu-item {
@@ -55,7 +55,8 @@ html {
 .restaurant-menu-item {
     display: flex;
     flex-direction: column;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .restaurant-img {
@@ -120,6 +121,13 @@ html {
 .line-break {
     height: 1px;
     background-color: #EAFCF3;
+}
+
+.line-break-partial {
+    height: 1px;
+    background-color: #EAFCF3;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #toggle-navbar {

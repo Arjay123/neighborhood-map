@@ -27,7 +27,7 @@
                 <h4><a class="navbar-link" href="#">Favorites</a></h4>
             </div>
             <div class="line-break"></div>
-            <div data-bind="template: { name: selected_view }">
+            <div class="navbar-template" data-bind="template: { name: selected_view }">
 
             </div>
         </div>
@@ -55,10 +55,10 @@
         <div class="navbar-menu-items" data-bind="foreach: restaurant_list">
             <div class="navbar-menu-item restaurant-menu-item">
                 <div class="restaurant">
-                    <img class="restaurant-img" src="http://placehold.it/80/80">
+                    <img class="restaurant-img" data-bind="attr: { src: img }">
                     <div class="restaurant-details" data-bind="click: $parent.restaurant_clicked">
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
-                        <div data-bind="template: { name: rating }"></div>
+                        <div data-bind="template: { name: get_rating_template }"></div>
                         <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
                     </div>             
                 </div>
@@ -66,7 +66,9 @@
                     <a class="navbar-link" href="#"><i class="fa fa-heart" aria-hidden="true"></i> Favorite</a>
                 </div>
             </div>
+            <div class="line-break-partial"></div>
         </div>
+
     </script>
 
     <script type="text/html" id="rating_5">

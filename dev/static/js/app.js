@@ -1,3 +1,21 @@
+function Restaurant(name, price, category, rating, review_ct, img, location){
+    var self = this;
+
+    this.name = name;
+    this.price = price;
+    this.category = category;
+    this.rating = rating;
+    this.review_ct = review_ct;
+    this.img = img;
+    this.location = location;
+
+    this.get_rating_template = function(){
+        return "rating_" + self.rating;
+    };
+}
+
+
+
 function ViewModel(categories){
     var self = this;
     self.categories = categories;
@@ -23,12 +41,13 @@ function ViewModel(categories){
                 response = $.parseJSON(response);
                 for(index in response["businesses"]){
                     var curr = response["businesses"][index]
-                    var restaurant = {
-                        "name": curr["name"],
-                        "price": curr["price"],
-                        "category": curr["categories"][0]["title"],
-                        "rating": "rating_" + curr["rating"],
-                    };
+                    var restaurant = new Restaurant(curr["name"], 
+                                                    curr["price"],
+                                                    curr["categories"][0]["title"],
+                                                    curr["rating"],
+                                                    curr["review_count"],
+                                                    curr["image_url"],
+                                                    curr["location"]);
 
                     self.restaurant_list.push(restaurant);
                 };
