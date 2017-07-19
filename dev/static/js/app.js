@@ -1,4 +1,4 @@
-function Restaurant(name, price, category, rating, review_ct, img, location){
+function Restaurant(name, price, category, rating, review_ct, img, location, url){
     var self = this;
 
     this.name = name;
@@ -8,6 +8,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location){
     this.review_ct = review_ct;
     this.img = img;
     this.location = location;
+    this.url = url;
 
     this.get_rating_template = function(){
         return "rating_" + self.rating;
@@ -47,7 +48,8 @@ function ViewModel(categories){
                                                     curr["rating"],
                                                     curr["review_count"],
                                                     curr["image_url"],
-                                                    curr["location"]);
+                                                    curr["location"],
+                                                    curr["url"]);
 
                     self.restaurant_list.push(restaurant);
                 };

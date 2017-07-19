@@ -75,6 +75,7 @@ html {
     /*width: 100%;*/
     padding-top: 10px;
     padding-bottom: 10px;
+    display: flex;
 }
 
 .address {
@@ -84,6 +85,15 @@ html {
 .restaurant {
     display: flex;
     width: 100%;
+}
+
+.ctrl-link {
+    flex: 1;
+    width: 100%;
+}
+
+.yelp-logo {
+    width: 20px;
 }
 
 .four-star {
