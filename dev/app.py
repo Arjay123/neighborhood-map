@@ -5,6 +5,7 @@ from flask import Flask
 from flask import render_template
 from flask import url_for
 from flask import request
+from flask import send_file
 
 app = Flask(__name__)
 
@@ -35,7 +36,7 @@ def yelp_api():
         return "No category selected"
 
     endpoint = "https://api.yelp.com/v3/businesses/search"
-    query = "location=San Jose&categories=%s" % str(category)
+    query = "limit=10&location=San Jose&categories=%s" % str(category)
 
     r = requests.get(endpoint + "?" + query, 
         headers={'Authorization': 'bearer %s' % YELP_API_KEY})
@@ -43,6 +44,10 @@ def yelp_api():
 
     return r.text
 
+
+@app.route("/img/<filename>")
+def get_img(filename):
+    pass
 
 @app.route("/categories")
 def get_yelp_food_categories():

@@ -27,13 +27,16 @@ function ViewModel(categories){
                         "name": curr["name"],
                         "price": curr["price"],
                         "category": curr["categories"][0]["title"],
-                        "rating": curr["rating"],
+                        "rating": "rating_" + curr["rating"],
                     };
 
                     self.restaurant_list.push(restaurant);
                 };
                 console.log(self.restaurant_list());
                 self.selected_view("restaurants");
+                
+                $("#navbar-scroll-div").scrollTop(0);
+                
             }
         });
     };
@@ -41,6 +44,11 @@ function ViewModel(categories){
     self.restaurant_clicked = function(element){
         console.log(element);
     };
+
+    self.get_star_img = function(rating){
+        console.log(rating);
+        return "{{url_for('static', filename='img/small_1.png')}}";
+    }
 };
 
 // ko.applyBindings(new ViewModel());

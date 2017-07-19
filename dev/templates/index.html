@@ -22,7 +22,7 @@
             <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="title flex-item">Neighborhood Map</h3>
         </div>
         <div class="line-break"></div>
-        <div class="navbar-content">
+        <div class="navbar-content" id="navbar-scroll-div">
             <div class="navbar-menu-hdr">
                 <h4><a class="navbar-link" href="#">Favorites</a></h4>
             </div>
@@ -35,7 +35,6 @@
 
     <div class="content">
         <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
-
     </div>
 
     <script type="text/html" id="categories">
@@ -59,7 +58,7 @@
                     <img class="restaurant-img" src="http://placehold.it/80/80">
                     <div class="restaurant-details" data-bind="click: $parent.restaurant_clicked">
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
-                        <img src="{{url_for('static', filename='img/small_1.png')}}">
+                        <div data-bind="template: { name: rating }"></div>
                         <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
                     </div>             
                 </div>
@@ -69,6 +68,47 @@
             </div>
         </div>
     </script>
+
+    <script type="text/html" id="rating_5">
+        <img src="{{url_for('static', filename='img/small_5.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_4.5">
+        <img src="{{url_for('static', filename='img/small_4_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_4">
+        <img src="{{url_for('static', filename='img/small_4.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_3.5">
+        <img src="{{url_for('static', filename='img/small_3_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_3">
+        <img src="{{url_for('static', filename='img/small_3.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_2.5">
+        <img src="{{url_for('static', filename='img/small_2_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_2">
+        <img src="{{url_for('static', filename='img/small_2.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_1.5">
+        <img src="{{url_for('static', filename='img/small_1_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_1">
+        <img src="{{url_for('static', filename='img/small_1.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_0">
+        <img src="{{url_for('static', filename='img/small_0.png')}}">
+    </script>
+    
 
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
