@@ -21,6 +21,7 @@ function ViewModel(categories){
     var self = this;
     self.categories = categories;
     self.restaurant_list = ko.observableArray();
+    self.favorites = ko.observableArray();
     self.selected_view = ko.observable("categories");
     self.fav_shown = false;
 
@@ -61,6 +62,10 @@ function ViewModel(categories){
                 
             }
         });
+    };
+
+    self.add_favorite = function(element){
+        self.favorites.push(element);
     };
 
     self.restaurant_clicked = function(element){
