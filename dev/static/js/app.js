@@ -1,4 +1,4 @@
-function Restaurant(name, price, category, rating, review_ct, img, location, url){
+function Restaurant(name, price, category, rating, review_ct, img, location, url, id){
     var self = this;
 
     this.name = name;
@@ -9,6 +9,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
     this.img = img;
     this.location = location;
     this.url = url;
+    this.id = id;
 
     this.get_rating_template = function(){
         return "rating_" + self.rating;
@@ -51,7 +52,8 @@ function ViewModel(categories){
                                                     curr["review_count"],
                                                     curr["image_url"],
                                                     curr["location"],
-                                                    curr["url"]);
+                                                    curr["url"],
+                                                    curr["id"]);
 
                     self.restaurant_list.push(restaurant);
                 };
@@ -64,8 +66,34 @@ function ViewModel(categories){
         });
     };
 
-    self.add_favorite = function(element){
-        self.favorites.push(element);
+    self.add_favorite = function(obj, event){
+
+        var index = -1;
+        for(var i in self.favorites()){
+
+            if(self.favorites()[i].id.valueOf() === obj.id.valueOf()){
+                index = i;
+                break;
+            }
+        }
+
+        if(index > -1){
+
+            $(event.target).animate({
+                color: "#EAFCF3"
+            }, 200);
+
+            self.favorites.splice(index, 1);
+        }
+        else {
+
+            $(event.target).animate({
+                color: "red"
+            }, 200);
+
+            self.favorites.push(obj);
+        }
+        
     };
 
     self.restaurant_clicked = function(element){
