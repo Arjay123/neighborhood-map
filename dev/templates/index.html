@@ -29,9 +29,9 @@
             <div id="favorites">
                 <div class="navbar-menu-items" data-bind="foreach: favorites">
                     <div class="navbar-menu-item restaurant-menu-item">
-                        <div class="restaurant">
+                        <div class="restaurant" data-bind="click: $parent.restaurant_clicked">
                             <img class="restaurant-img" data-bind="attr: { src: img }">
-                            <div class="restaurant-details" data-bind="click: $parent.restaurant_clicked">
+                            <div class="restaurant-details" >
                                 <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
                                 <div data-bind="template: { name: get_rating_template }"></div>
                                 <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
@@ -73,9 +73,9 @@
         </div>
         <div class="navbar-menu-items" data-bind="foreach: restaurant_list">
             <div class="navbar-menu-item restaurant-menu-item">
-                <div class="restaurant">
+                <div class="restaurant" data-bind="click: $parent.restaurant_clicked">
                     <img class="restaurant-img" data-bind="attr: { src: img }">
-                    <div class="restaurant-details" data-bind="click: $parent.restaurant_clicked">
+                    <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
                         <div data-bind="template: { name: get_rating_template }"></div>
                         <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
