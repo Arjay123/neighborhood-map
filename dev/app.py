@@ -52,28 +52,11 @@ def get_img(filename):
 @app.route("/categories")
 def get_yelp_food_categories():
     return open("yelp_categories.json").read()
-    # categories = {}
-    # cat_json = json.loads(open("yelp_categories.json").read())
-
-    # for item in cat_json:
-    #     if "food" in item["parents"]:
-    #         add = True
-
-    #         if "country_whitelist" in item:
-    #             if "US" not in item["country_whitelist"]:
-    #                 add = False
-
-    #         if "country_blacklist" in item:
-    #             if "US" in item["country_blacklist"]:
-    #                 add = False
-
-    #         if add:
-    #             categories[item["title"]] = item["alias"]
-
-    # return categories
 
 
 
 
 if __name__ == "__main__":
-    app.run()
+    app.jinja_env.auto_reload = True
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.run(debug=True, host='0.0.0.0')
