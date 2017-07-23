@@ -66,6 +66,11 @@ function ViewModel(categories){
         });
     };
 
+    self.remove_favorite = function(item){
+        self.favorites.remove(item);
+        
+    };
+
     self.add_favorite = function(obj, event){
 
         var index = -1;
@@ -130,6 +135,8 @@ function ViewModel(categories){
         self.fav_shown = !self.fav_shown;
         
     };
+
+    
 };
 
 // ko.applyBindings(new ViewModel());
