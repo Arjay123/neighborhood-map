@@ -92,6 +92,10 @@ function ViewModel(categories){
         
     };
 
+    self.show_cat = function(){
+        self.selected_view("categories");
+    };
+
     self.fav_menu_icon = ko.pureComputed(function(){
         return self.fav_shown() ? "fa fa-angle-double-up fa-2x" : "fa fa-angle-double-down fa-2x"
     }, self);
