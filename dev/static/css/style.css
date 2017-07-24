@@ -70,12 +70,8 @@ html {
 }
 
 .restaurant-controls {
-    /*text-align: right;*/
-    /*flex: 1;*/
-    /*width: 100%;*/
     padding-top: 10px;
     padding-bottom: 10px;
-    display: flex;
 }
 
 .address {
@@ -83,12 +79,6 @@ html {
 }
 
 .restaurant {
-    display: flex;
-    width: 100%;
-}
-
-.ctrl-link {
-    flex: 1;
     width: 100%;
 }
 
@@ -96,30 +86,16 @@ html {
     width: 20px;
 }
 
-.four-star {
-    background: url('../img/small_0.png');
-    width: 82px;
-    height: 14px;
-}
-
 .restaurant-details {
-    /*width: 100%;*/
     padding-left: 10px;
 }
 
-.navbar-menu-hdr {
-    text-align: center;
-}
 
 #favorites {
     display: none;
 }
 
 .text-center {
-    text-align: center;
-}
-
-.title {
     text-align: center;
 }
 

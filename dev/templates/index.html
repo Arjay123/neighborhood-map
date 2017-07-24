@@ -19,7 +19,7 @@
     
     <div id="navbar" class="navbar">
         <div class="navbar-hdr flex-container">
-            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="title flex-item">Neighborhood Map</h3>
+            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="text-center flex-item">Neighborhood Map</h3>
         </div>
         <div class="line-break"></div>
         <div class="navbar-content" id="navbar-scroll-div">
@@ -30,7 +30,7 @@
                 <div class="navbar-menu-items" data-bind="foreach: favorites">
                     <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
                     <div class="navbar-menu-item restaurant-menu-item">
-                        <div class="restaurant" data-bind="click: $parent.restaurant_clicked">
+                        <div class="restaurant flex-container" data-bind="click: $parent.restaurant_clicked">
                             <img class="restaurant-img" data-bind="attr: { src: img }">
                             <div class="restaurant-details">
                                 <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
@@ -38,9 +38,9 @@
                                 <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
                             </div>             
                         </div>
-                        <div class="restaurant-controls">
-                            <a class="navbar-link ctrl-link" data-bind="click: $parent.toggle_favorite"><i class="fa fa-ban fa-2x" aria-hidden="true"></i> Remove</a>
-                            <a class="navbar-link ctrl-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
+                        <div class="restaurant-controls flex-container">
+                            <a class="navbar-link flex-item" data-bind="click: $parent.toggle_favorite"><i class="fa fa-ban fa-2x" aria-hidden="true"></i> Remove</a>
+                            <a class="navbar-link flex-item" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
     </div>
 
     <script type="text/html" id="categories">
-        <div class="navbar-menu-hdr">
+        <div class="text-center">
             <h4>Categories</h4>
         </div>
         <div class="navbar-menu-items" data-bind="foreach: category_list">
@@ -69,12 +69,12 @@
 
     <script type="text/html" id="restaurants">
         <div class="navbar-hdr flex-container">
-            <i class="fa fa-arrow-left fa-2x" aria-hidden="true" data-bind="click: show_cat"></i><h4 class="flex-item title">Restaurants</h4>
+            <i class="fa fa-arrow-left fa-2x" aria-hidden="true" data-bind="click: show_cat"></i><h4 class="flex-item text-center">Restaurants</h4>
         </div>
         <div class="navbar-menu-items" data-bind="foreach: restaurant_list">
             <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
             <div class="navbar-menu-item restaurant-menu-item">
-                <div class="restaurant" data-bind="click: $parent.restaurant_clicked">
+                <div class="restaurant flex-container" data-bind="click: $parent.restaurant_clicked">
                     <img class="restaurant-img" data-bind="attr: { src: img }">
                     <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
@@ -82,9 +82,9 @@
                         <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
                     </div>             
                 </div>
-                <div class="restaurant-controls">
-                    <a class="navbar-link ctrl-link" data-bind="click: $parent.toggle_favorite"><i class="fa fa-heart" data-bind="css: {favorite: favorite() }" aria-hidden="true"></i> Favorite</a>
-                    <a class="navbar-link ctrl-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
+                <div class="restaurant-controls flex-container">
+                    <a class="navbar-link flex-item" data-bind="click: $parent.toggle_favorite"><i class="fa fa-heart" data-bind="css: {favorite: favorite() }" aria-hidden="true"></i> Favorite</a>
+                    <a class="navbar-link flex-item" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                 </div>
             </div>
         </div>
