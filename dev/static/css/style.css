@@ -137,6 +137,10 @@ html {
     color: #EAFCF3;
 }
 
+.favorite {
+    color: red;
+}
+
 .line-break {
     height: 1px;
     background-color: #EAFCF3;

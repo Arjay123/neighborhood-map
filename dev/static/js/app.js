@@ -10,11 +10,12 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
     this.location = location;
     this.url = url;
     this.id = id;
-    this.favorite = false;
+    this.favorite = ko.observable(false);
 
     this.get_rating_template = function(){
         return "rating_" + self.rating;
     };
+
 }
 
 
@@ -25,7 +26,7 @@ function ViewModel(categories){
     self.restaurant_list = ko.observableArray();
     self.favorites = ko.observableArray();
     self.selected_view = ko.observable("categories");
-    self.fav_shown = false;
+    self.fav_shown = ko.observable(false);
 
     // console.log(Object.keys(self.categories));
     self.category_list = ko.observableArray(Object.keys(self.categories));
@@ -67,46 +68,15 @@ function ViewModel(categories){
         });
     };
 
-    self.remove_favorite = function(item){
+    self.toggle_favorite = function(obj){
 
-        self.favorites.remove(item);
-        item.favorite = false;
-
-    };
-
-    self.add_favorite = function(obj, event){
-
-        var index = -1;
-        for(var i in self.favorites()){
-
-            if(self.favorites()[i].id.valueOf() === obj.id.valueOf()){
-                index = i;
-                break;
-            }
-        }
-
-        if(index > -1){
-
-            $(event.target.children[0]).animate({
-                color: "#EAFCF3"
-            }, 200);
-
-            obj.favorite = false;
+        var index = self.favorites().indexOf(obj);
+        if(index > -1)
             self.favorites.splice(index, 1);
-
-        }
-        else {
-
-            $(event.target.children[0]).animate({
-                color: "red"
-            }, 200);
-
-            obj.favorite = true;
+        else 
             self.favorites.push(obj);
-        }
-
-        console.log(self.favorites());
-        console.log(self.restaurant_list());
+        
+        obj.favorite(!obj.favorite());
         
     };
 
@@ -114,28 +84,19 @@ function ViewModel(categories){
         console.log(element);
     };
 
-    self.get_star_img = function(rating){
-        console.log(rating);
-        return "{{url_for('static', filename='img/small_1.png')}}";
-    };
 
     self.fav_click = function(element){
 
         $("#favorites").slideToggle();
-        if(!self.fav_shown)
-            $('#drop-icon').addClass('fa-angle-double-up').removeClass('fa-angle-double-down');
-        else
-            $('#drop-icon').addClass('fa-angle-double-down').removeClass('fa-angle-double-up');
-
-        self.fav_shown = !self.fav_shown;
+        self.fav_shown(!self.fav_shown());
         
     };
 
+    self.fav_menu_icon = ko.pureComputed(function(){
+        return self.fav_shown() ? "fa fa-angle-double-up fa-2x" : "fa fa-angle-double-down fa-2x"
+    }, self);
     
 };
-
-// ko.applyBindings(new ViewModel());
-
 
 
 $.ajax("/categories", {
@@ -164,24 +125,3 @@ $.ajax("/categories", {
         ko.applyBindings(new ViewModel(categories));
     }
 });
-
-// $.ajax("https://api.yelp.com/v3/businesses/search?location=San%20Jose", {
-//     data: {
-//         grant_type: "client_credentials",
-//         client_id: yelp_ID,
-//         client_secret: yelp_KEY
-//     },
-//     success: function(data, status, jqXHR){
-//         console.log(data);
-//         console.log(status);
-//     },
-//     error: function(jqXHR, status, error){
-//         console.log(error);
-//         console.log(status);
-//         console.log(jqXHR);
-//     },
-//     dataType: "jsonp",
-//     cache: true,
-//     async: false,
-//     method: "POST"
-// });

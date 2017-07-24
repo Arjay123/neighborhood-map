@@ -24,7 +24,7 @@
         <div class="line-break"></div>
         <div class="navbar-content" id="navbar-scroll-div">
             <div class="navbar-hdr flex-container" data-bind="click: fav_click">
-                <i id="drop-icon" class="fa fa-angle-double-down fa-2x" aria-hidden="true"></i><h3 class="flex-item text-center"> Favorites</h3>
+                <i id="drop-icon" data-bind="css: fav_menu_icon" aria-hidden="true"></i><h3 class="flex-item text-center"> Favorites</h3>
             </div>
             <div id="favorites">
                 <div class="navbar-menu-items" data-bind="foreach: favorites">
@@ -39,7 +39,7 @@
                             </div>             
                         </div>
                         <div class="restaurant-controls">
-                            <a class="navbar-link ctrl-link" data-bind="click: $parent.remove_favorite"><i class="fa fa-ban fa-2x" aria-hidden="true"></i> Remove</a>
+                            <a class="navbar-link ctrl-link" data-bind="click: $parent.toggle_favorite"><i class="fa fa-ban fa-2x" aria-hidden="true"></i> Remove</a>
                             <a class="navbar-link ctrl-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                     </div>             
                 </div>
                 <div class="restaurant-controls">
-                    <a class="navbar-link ctrl-link" data-bind="click: $parent.add_favorite"><i class="fa fa-heart" data-bind="css: { favorite: favorite }" aria-hidden="true"></i> Favorite</a>
+                    <a class="navbar-link ctrl-link" data-bind="click: $parent.toggle_favorite"><i class="fa fa-heart" data-bind="css: {favorite: favorite() }" aria-hidden="true"></i> Favorite</a>
                     <a class="navbar-link ctrl-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                 </div>
             </div>
