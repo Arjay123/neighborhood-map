@@ -10,6 +10,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
     this.location = location;
     this.url = url;
     this.id = id;
+    this.favorite = false;
 
     this.get_rating_template = function(){
         return "rating_" + self.rating;
@@ -67,8 +68,10 @@ function ViewModel(categories){
     };
 
     self.remove_favorite = function(item){
+
         self.favorites.remove(item);
-        
+        item.favorite = false;
+
     };
 
     self.add_favorite = function(obj, event){
@@ -84,20 +87,26 @@ function ViewModel(categories){
 
         if(index > -1){
 
-            $(event.target).animate({
+            $(event.target.children[0]).animate({
                 color: "#EAFCF3"
             }, 200);
 
+            obj.favorite = false;
             self.favorites.splice(index, 1);
+
         }
         else {
 
-            $(event.target).animate({
+            $(event.target.children[0]).animate({
                 color: "red"
             }, 200);
 
+            obj.favorite = true;
             self.favorites.push(obj);
         }
+
+        console.log(self.favorites());
+        console.log(self.restaurant_list());
         
     };
 
@@ -117,20 +126,6 @@ function ViewModel(categories){
             $('#drop-icon').addClass('fa-angle-double-up').removeClass('fa-angle-double-down');
         else
             $('#drop-icon').addClass('fa-angle-double-down').removeClass('fa-angle-double-up');
-        // if(self.fav_shown){
-
-        //     $("#navbar-half").css("height", "100%");
-        //     $("#favorites").css("height", "0%");
-        //     $("#favorites").css("display", "none");
-        //     $("#navbar-half").css("display", "block");
-        // }
-        // else {
-
-        //     $("#navbar-half").css("height", "0%");
-        //     $("#favorites").css("height", "100%");
-        //     $("#favorites").css("display", "block");
-        //     $("#navbar-half").css("display", "none");
-        // }
 
         self.fav_shown = !self.fav_shown;
         

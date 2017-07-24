@@ -83,7 +83,7 @@
                     </div>             
                 </div>
                 <div class="restaurant-controls">
-                    <a class="navbar-link ctrl-link" data-bind="click: $parent.add_favorite"><i class="fa fa-heart" aria-hidden="true"></i> Favorite</a>
+                    <a class="navbar-link ctrl-link" data-bind="click: $parent.add_favorite"><i class="fa fa-heart" data-bind="css: { favorite: favorite }" aria-hidden="true"></i> Favorite</a>
                     <a class="navbar-link ctrl-link" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                 </div>
             </div>
