@@ -37,14 +37,6 @@ function clear_markers(){
     markers = {};
 };
 
-function animate_marker(restaurant){
-    console.log("hi");
-};
-
-function unanimate_marker(restaurant){
-    console.log("out");
-    console.log(marker);
-};
 
 function toggle_marker_bounce(restaurant){
     var marker = markers[restaurant.id];
