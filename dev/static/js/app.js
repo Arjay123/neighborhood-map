@@ -1,4 +1,4 @@
-function Restaurant(name, price, category, rating, review_ct, img, location, url, id){
+function Restaurant(name, price, category, rating, review_ct, img, location, url, id, favorite=false){
     var self = this;
 
     this.name = name;
@@ -10,13 +10,31 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
     this.location = location;
     this.url = url;
     this.id = id;
-    this.favorite = ko.observable(false);
+    this.favorite = ko.observable(favorite);
 
     this.get_rating_template = function(){
         return "rating_" + self.rating;
     };
 
+    this.serialize = function(){
+        return {
+            "name": self.name,
+            "price": self.price,
+            "category": self.category,
+            "rating": self.rating,
+            "review_ct": self.review_ct,
+            "img": self.img,
+            "location": self.location,
+            "url": self.url,
+            "id": self.id,
+            "favorite": self.favorite()
+        }
+    };
 }
+
+Restaurant.deserialize = function(obj){
+    return new Restaurant(obj.name, obj.price, obj.category, obj.rating, obj.review_ct, obj.img, obj.location, obj.url, obj.id, obj.favorite);
+};
 
 
 
@@ -34,18 +52,26 @@ function ViewModel(categories){
     self.prev_available = ko.observable(false);
     self.next_available = ko.observable(false);
 
+    
+
     // console.log(Object.keys(self.categories));
     self.category_list = ko.observableArray(Object.keys(self.categories));
 
-    console.log(self.category_list());
+    var prev_favs = JSON.parse(localStorage.getItem("favorites"));
+    for(var i in prev_favs){
+        self.favorites.push(Restaurant.deserialize(prev_favs[i]));
+    }
 
     self.toggleNavbar = function(){
         $("#navbar").toggle("slide", 300);
     };
 
     self.get_fav_by_id = function(id){
+
         return ko.utils.arrayFirst(self.favorites(), function(item){
-            return id === item.id;
+            console.log(id.valueOf() + " - " + item.id.valueOf());
+            console.log(id.valueOf() === item.id.valueOf());
+            return id.valueOf() === item.id.valueOf();
         });
     };
 
@@ -104,9 +130,13 @@ function ViewModel(categories){
 
                     var match = self.get_fav_by_id(restaurant.id);
                     if (!match){
+                        console.log("not pushing " + restaurant.id);
                         self.restaurant_list.push(restaurant);
                     }
                     else {
+                        console.log("pushing " + match.id);
+                        console.log("favorite");
+                        console.log(match.favorite());
                         self.restaurant_list.push(match);
                     }
                     
@@ -131,9 +161,15 @@ function ViewModel(categories){
             self.favorites.remove(match);
         }
 
-        console.log(self.favorites());
         obj.favorite(!obj.favorite());
         
+        var store_favs = [];
+        ko.utils.arrayForEach(self.favorites(), function(item) {
+            store_favs.push(item.serialize());
+        });
+
+        localStorage.setItem("favorites", JSON.stringify(store_favs));
+        console.log(JSON.parse(localStorage.getItem("favorites")));
     };
 
     self.restaurant_clicked = function(element){
