@@ -50,6 +50,10 @@ html {
     height: 100%;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .navbar-menu-item {
     padding-left: 20px;
 }
@@ -125,7 +129,7 @@ html {
 }
 
 .ctrl-box {
-    border: 1px solid #EAFCF3;
+    /*border: 1px solid #EAFCF3;*/
     padding-left: 20px;
     padding-right: 20px;
 }
