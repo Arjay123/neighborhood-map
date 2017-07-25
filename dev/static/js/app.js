@@ -37,9 +37,16 @@ function ViewModel(categories){
         $("#navbar").toggle("slide", 300);
     };
 
+    self.get_fav_by_id = function(id){
+        return ko.utils.arrayFirst(self.favorites(), function(item){
+            return id === item.id;
+        });
+    };
+
     self.cat_clicked = function(element){
         console.log(element);
         console.log(self.categories[element]);
+        self.restaurant_list.removeAll();
 
         $.ajax("/yelp?category=" + self.categories[element], {
             success: function(response, status, test){
@@ -57,7 +64,14 @@ function ViewModel(categories){
                                                     curr["url"],
                                                     curr["id"]);
 
-                    self.restaurant_list.push(restaurant);
+                    var match = self.get_fav_by_id(restaurant.id);
+                    if (!match){
+                        self.restaurant_list.push(restaurant);
+                    }
+                    else {
+                        self.restaurant_list.push(match);
+                    }
+                    
                 };
                 console.log(self.restaurant_list());
                 self.selected_view("restaurants");
@@ -70,12 +84,15 @@ function ViewModel(categories){
 
     self.toggle_favorite = function(obj){
 
-        var index = self.favorites().indexOf(obj);
-        if(index > -1)
-            self.favorites.splice(index, 1);
-        else 
+        var match =self.get_fav_by_id(obj.id);
+        if(!match){
             self.favorites.push(obj);
-        
+        }
+        else{
+            self.favorites.remove(match);
+        }
+
+        console.log(self.favorites());
         obj.favorite(!obj.favorite());
         
     };
