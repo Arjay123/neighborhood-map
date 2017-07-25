@@ -33,6 +33,7 @@ html {
 
 .navbar-hdr {
     padding-left: 20px;
+    padding-right: 20px;
     padding-top: 10px;
     align-items: center;
 
@@ -45,7 +46,8 @@ html {
 }
 
 .navbar-menu-items {
-    padding-bottom: 50px;
+    margin-bottom: 50px;
+    height: 100%;
 }
 
 .navbar-menu-item {
@@ -120,6 +122,12 @@ html {
 .line-break {
     height: 1px;
     background-color: #EAFCF3;
+}
+
+.ctrl-box {
+    border: 1px solid #EAFCF3;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .line-break-partial {

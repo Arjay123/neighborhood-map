@@ -71,6 +71,14 @@
         <div class="navbar-hdr flex-container">
             <i class="fa fa-arrow-left fa-2x" aria-hidden="true" data-bind="click: show_cat"></i><h4 class="flex-item text-center">Restaurants</h4>
         </div>
+        <div class="flex-container">
+            <div data-bind="visible: prev_available" class="flex-item flex-container ctrl-box">
+                <i class="fa fa-arrow-left" aria-hidden="true" data-bind="click: get_prev_listings"></i><h4 class="flex-item text-center">Previous 10</h4>  
+            </div>
+            <div data-bind="visible: next_available" class="flex-item flex-container ctrl-box">
+                <h4 class="flex-item text-center">Next 10</h4><i class="fa fa-arrow-right" aria-hidden="true" data-bind="click: get_next_listings"></i>
+            </div>
+        </div>
         <div class="navbar-menu-items" data-bind="foreach: restaurant_list">
             <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
             <div class="navbar-menu-item restaurant-menu-item">
@@ -88,6 +96,7 @@
                 </div>
             </div>
         </div>
+
 
     </script>
 

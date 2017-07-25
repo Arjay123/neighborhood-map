@@ -27,6 +27,12 @@ function ViewModel(categories){
     self.favorites = ko.observableArray();
     self.selected_view = ko.observable("categories");
     self.fav_shown = ko.observable(false);
+    self.page = 0;
+    self.list_per_page = 10;
+    self.current_category = null;
+    self.total_current_restaurants = 0;
+    self.prev_available = ko.observable(false);
+    self.next_available = ko.observable(false);
 
     // console.log(Object.keys(self.categories));
     self.category_list = ko.observableArray(Object.keys(self.categories));
@@ -43,15 +49,47 @@ function ViewModel(categories){
         });
     };
 
-    self.cat_clicked = function(element){
-        console.log(element);
-        console.log(self.categories[element]);
-        self.restaurant_list.removeAll();
+    self.set_prev_available = function(){
+        self.prev_available(self.page != 0);
+    };
 
-        $.ajax("/yelp?category=" + self.categories[element], {
+    self.set_next_available = function(){
+        self.next_available((self.page * self.list_per_page) < self.total_current_restaurants);
+    };
+
+    self.get_next_listings = function(){
+
+        var offset = ++self.page * self.list_per_page;
+        self.yelp_ajax(self.current_category, offset);
+    };
+
+    self.get_prev_listings = function(){
+
+        var offset = --self.page * self.list_per_page;
+        self.yelp_ajax(self.current_category, offset);
+    };
+
+    self.cat_clicked = function(element){
+
+        self.page = 0;
+        self.current_category = self.categories[element];
+        self.yelp_ajax(self.current_category, 0);
+
+    };
+
+    self.yelp_ajax = function(category, offset){
+
+        
+
+        self.restaurant_list.removeAll();
+        $.ajax("/yelp?category=" + category + "&offset=" + offset, {
             success: function(response, status, test){
-                console.log(response);
+
                 response = $.parseJSON(response);
+
+                self.total_current_restaurants = response["total"];
+                self.set_next_available();
+                self.set_prev_available();
                 for(index in response["businesses"]){
                     var curr = response["businesses"][index]
                     var restaurant = new Restaurant(curr["name"], 
@@ -73,13 +111,14 @@ function ViewModel(categories){
                     }
                     
                 };
-                console.log(self.restaurant_list());
+
                 self.selected_view("restaurants");
                 
                 $("#navbar-scroll-div").scrollTop(0);
                 
             }
         });
+
     };
 
     self.toggle_favorite = function(obj){
