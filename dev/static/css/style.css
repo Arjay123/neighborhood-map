@@ -20,6 +20,10 @@ html {
     overflow: hidden;
 }
 
+#map { 
+    height: 100%; 
+}
+
 .navbar {
     width: 70%;
     height: 100%;

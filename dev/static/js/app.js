@@ -1,4 +1,4 @@
-function Restaurant(name, price, category, rating, review_ct, img, location, url, id, favorite=false){
+function Restaurant(name, price, category, rating, review_ct, img, coordinates, url, id, favorite=false){
     var self = this;
 
     this.name = name;
@@ -7,7 +7,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
     this.rating = rating;
     this.review_ct = review_ct;
     this.img = img;
-    this.location = location;
+    this.coordinates = coordinates;
     this.url = url;
     this.id = id;
     this.favorite = ko.observable(favorite);
@@ -24,7 +24,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
             "rating": self.rating,
             "review_ct": self.review_ct,
             "img": self.img,
-            "location": self.location,
+            "coordinates": self.coordinates,
             "url": self.url,
             "id": self.id,
             "favorite": self.favorite()
@@ -33,7 +33,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
 }
 
 Restaurant.deserialize = function(obj){
-    return new Restaurant(obj.name, obj.price, obj.category, obj.rating, obj.review_ct, obj.img, obj.location, obj.url, obj.id, obj.favorite);
+    return new Restaurant(obj.name, obj.price, obj.category, obj.rating, obj.review_ct, obj.img, obj.coordinates, obj.url, obj.id, obj.favorite);
 };
 
 
@@ -124,7 +124,7 @@ function ViewModel(categories){
                                                     curr["rating"],
                                                     curr["review_count"],
                                                     curr["image_url"],
-                                                    curr["location"],
+                                                    curr["coordinates"],
                                                     curr["url"],
                                                     curr["id"]);
 
@@ -141,6 +141,9 @@ function ViewModel(categories){
                     }
                     
                 };
+
+                clear_markers();
+                add_markers(self.restaurant_list());
 
                 self.selected_view("restaurants");
                 
@@ -221,3 +224,7 @@ $.ajax("/categories", {
         ko.applyBindings(new ViewModel(categories));
     }
 });
+
+
+
+
