@@ -1,5 +1,5 @@
 var map;
-var markers = [];
+var markers = {};
 
 function initMap() {
 
@@ -13,7 +13,7 @@ function initMap() {
 
 function add_markers(restaurants){
 
-    
+
     var bounds = new google.maps.LatLngBounds();
 
     restaurants.forEach(function(restaurant){
@@ -23,7 +23,7 @@ function add_markers(restaurants){
             map: map,
             animation: google.maps.Animation.DROP
         });
-        markers.push(new_marker);
+        markers[restaurant.id] = (new_marker);
         bounds.extend(new_marker.position);
     });
 
@@ -31,7 +31,27 @@ function add_markers(restaurants){
 };
 
 function clear_markers(){
-    markers.forEach(function(marker){
-        marker.setMap(null);
-    });
-}
+    for(var key in markers){
+        markers[key].setMap(null);
+    };
+    markers = {};
+};
+
+function animate_marker(restaurant){
+    console.log("hi");
+};
+
+function unanimate_marker(restaurant){
+    console.log("out");
+    console.log(marker);
+};
+
+function toggle_marker_bounce(restaurant){
+    var marker = markers[restaurant.id];
+    if(marker.getAnimation() !== null){
+        marker.setAnimation(null);
+    }
+    else{
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+};

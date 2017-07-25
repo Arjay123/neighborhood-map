@@ -106,7 +106,6 @@ function ViewModel(categories){
     self.yelp_ajax = function(category, offset){
 
         
-
         self.restaurant_list.removeAll();
         $.ajax("/yelp?category=" + category + "&offset=" + offset, {
             success: function(response, status, test){
@@ -189,6 +188,14 @@ function ViewModel(categories){
 
     self.show_cat = function(){
         self.selected_view("categories");
+    };
+
+    self.animate_marker = function(item){
+        console.log(item);
+    };
+
+    self.unanimate_marker = function(item){
+        console.log(item);
     };
 
     self.fav_menu_icon = ko.pureComputed(function(){
