@@ -175,7 +175,7 @@ function ViewModel(categories){
     };
 
     self.restaurant_clicked = function(element){
-        show_restaurant(element);
+        show_restaurant_window(element);
     };
 
 

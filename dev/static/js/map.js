@@ -68,14 +68,14 @@ function reset_active_marker(){
     
 };
 
-function show_restaurant(restaurant){
+function show_restaurant_window(restaurant){
     change_active_marker(restaurant.id);
-    open_window(restaurant);
+    create_window(restaurant);
     change_color(restaurant.id);
 };
 
 
-function open_window(restaurant){
+function create_window(restaurant){
 
     $.ajax("/yelp_business?id=" + restaurant.id, {
         success: function(response, status){
