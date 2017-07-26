@@ -167,6 +167,8 @@ html {
     .navbar {
         width: 50%;
     }
+
+    
 }
 
 /* laptop */
@@ -174,6 +176,11 @@ html {
 
     #toggle-navbar {
         display: none;
+    }
+
+    #pano {
+        width: 400px;
+        height: 400px;
     }
 
     .navbar {

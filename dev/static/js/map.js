@@ -69,6 +69,12 @@ function reset_active_marker(){
 };
 
 function show_restaurant_window(restaurant){
+
+    if(!(restaurant.id in markers)){
+        console.log("can't show window, marker not present");
+        return;
+    }
+
     change_active_marker(restaurant.id);
     create_window(restaurant);
     change_color(restaurant.id);
@@ -95,6 +101,7 @@ function create_window(restaurant){
 };
 
 function show_window(restaurant, address, phone, hours){
+
     var marker = markers[restaurant.id];
     
     
@@ -167,6 +174,11 @@ function clear_markers(){
 
 
 function toggle_marker_bounce(restaurant){
+    if(!(restaurant.id in markers)){
+        console.log("can't change animation, marker not present");
+        return;
+    }
+
     var marker = markers[restaurant.id];
     if(marker.getAnimation() !== null){
         marker.setAnimation(null);
