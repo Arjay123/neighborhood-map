@@ -24,6 +24,11 @@ html {
     height: 100%; 
 }
 
+#pano {
+    width: 200px;
+    height: 200px;
+}
+
 .navbar {
     width: 70%;
     height: 100%;

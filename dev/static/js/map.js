@@ -1,6 +1,8 @@
 var map;
 var info_window;
 var active_marker;
+var sv_service;
+var pano;
 
 var markers = {};
 
@@ -11,6 +13,7 @@ function initMap() {
         center: {lat: 37.3382, lng: -121.8863},
     });
     info_window = new google.maps.InfoWindow();
+    sv_service = new google.maps.StreetViewService();
 
 }
 
@@ -74,21 +77,79 @@ function show_restaurant(restaurant){
 
 function open_window(restaurant){
 
+    $.ajax("/yelp_business?id=" + restaurant.id, {
+        success: function(response, status){
+            response = $.parseJSON(response);
+            console.log(response);
+            data = $.parseJSON(response["data"]);
+
+            var address = data["location"]["display_address"];
+            var phone = data["display_phone"];
+            var hours = data["hours"];
+
+            show_window(restaurant, address, phone, hours);
+            
+        }
+    });
+
+};
+
+function show_window(restaurant, address, phone, hours){
     var marker = markers[restaurant.id];
-    var content = "<div><div class='info-window-hdr'>" + 
-                    "<h3>" + restaurant.name + "</h3>" +
-                  "</div>" + 
-                  "<div class='restaurant-details'>" + 
-                    "<div data-bind='template: { name: rating }'></div>" +
-                  "</div></div>";
     
+    
+    var details_html = "<table>";
+
+    address.forEach(function(line){
+        details_html += "<tr><td>" + line + "</td></tr>";
+    });
+
+    details_html += "<tr><td>" + phone + "</td></tr>";
+    details_html += "</table>";
+
+    var content = "<div>" + 
+                      "<div class='info-window-hdr'>" + 
+                          "<h3>" + restaurant.name + "</h3>" +
+                      "</div>" + 
+                      "<div class='restaurant-details'>" + 
+                          details_html +
+                      "</div>" + 
+                  "</div>" + 
+                  "<div id='pano'>" +
+                  "</div>";
+
+
+
     info_window.close();
     info_window.setContent(content);
     info_window.open(map, marker);
     marker.setIcon();
 
 
-};
+    var rest_location = new google.maps.LatLng(restaurant.coordinates.latitude, restaurant.coordinates.longitude)
+    pano = new google.maps.StreetViewPanorama(document.getElementById("pano"));
+
+    sv_service.getPanorama({location: rest_location,
+                            radius: 50},
+                            function(data, status){
+                                if(status === "OK") {
+
+                                    var sv_heading = google.maps.geometry.spherical.computeHeading(
+                                        data.location.latLng, 
+                                        rest_location);
+
+                                    pano.setPano(data.location.pano);
+                                    pano.setPov({heading: sv_heading, pitch:0});
+                                    pano.setVisible(true);
+
+                                } else {
+                                    pano.setVisible(false);
+                                }
+                            });
+    map.setStreetView(pano);
+
+}
+
 
 function change_color(restaurant_id){
     var marker = markers[restaurant_id];

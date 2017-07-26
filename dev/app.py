@@ -46,6 +46,27 @@ def yelp_api():
     return r.text
 
 
+@app.route("/yelp_business")
+def get_business():
+    business_id = request.args.get("id", None)
+
+    if not business_id:
+        return "No id selected"
+
+    endpoint = "https://api.yelp.com/v3/businesses/"
+    query = endpoint + business_id
+
+    r = requests.get(query,
+            headers={'Authorization': 'bearer %s' %YELP_API_KEY})
+
+    response = {
+        "status": 200,
+        "data": r.text
+    }
+
+    return json.dumps(response)
+
+
 @app.route("/img/<filename>")
 def get_img(filename):
     pass
