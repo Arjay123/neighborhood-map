@@ -42,7 +42,7 @@ function add_markers(restaurants){
         
 
         new_marker.addListener("click", function(){
-            show_restaurant(restaurant);
+            show_restaurant_window(restaurant);
         });
 
         new_marker.addListener("mouseover", function(){
@@ -67,7 +67,7 @@ function change_active_marker(id){
 };
 
 function reset_active_marker(){
-    if(active_marker){
+    if(active_marker in markers){
         var marker = markers[active_marker];
         marker.setIcon();    
     }
@@ -173,9 +173,11 @@ function change_color(restaurant_id){
 function resize_map(){
 
     google.maps.event.trigger(map, "resize");
-    map.fitBounds(bounds);
+    if(bounds)
+        map.fitBounds(bounds);
     // var content = info_window.getContent();
-    if(info_window.getMap() !== null && typeof map !== "undefined"){
+
+    if(info_window.getMap() !== null && typeof info_window.getMap() !== "undefined"){
         info_window.close();
         // info_window.setContent(content[0]);
         info_window.open(map, markers[active_marker]);

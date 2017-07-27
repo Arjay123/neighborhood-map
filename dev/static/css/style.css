@@ -43,6 +43,14 @@ html {
     display: block;
 }
 
+.toggle-hdr {
+    background-color: #3E92CC;
+}
+
+.fa-bars {
+    color: #EAFCF3;
+}
+
 .content {
     /*width: 100%;*/
 }
