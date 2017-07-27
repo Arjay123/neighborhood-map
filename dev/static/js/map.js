@@ -6,6 +6,7 @@ var pano;
 var SANJOSE_COORD = {lat: 37.3382, lng: -121.8863};
 var DEFAULT_ZOOM = 11;
 var markers = {};
+var bounds;
 
 function initMap() {
 
@@ -15,7 +16,6 @@ function initMap() {
     });
     info_window = new google.maps.InfoWindow();
     sv_service = new google.maps.StreetViewService();
-
 }
 
 
@@ -29,7 +29,7 @@ function add_markers(restaurants){
         return;
     }
 
-    var bounds = new google.maps.LatLngBounds();
+    bounds = new google.maps.LatLngBounds();
 
     restaurants.forEach(function(restaurant){
 
@@ -120,21 +120,21 @@ function show_window(restaurant, address, phone, hours){
     details_html += "<tr><td>" + phone + "</td></tr>";
     details_html += "</table>";
 
-    var content = "<div>" + 
+    var content = $("<div id='info_window'>" + 
                       "<div class='info-window-hdr'>" + 
                           "<h3>" + restaurant.name + "</h3>" +
                       "</div>" + 
                       "<div class='restaurant-details'>" + 
                           details_html +
                       "</div>" + 
-                  "</div>" + 
-                  "<div id='pano'>" +
-                  "</div>";
+                      "<div id='pano'>" +
+                      "</div>" +
+                    "</div>");
 
 
 
     info_window.close();
-    info_window.setContent(content);
+    info_window.setContent(content[0]);
     info_window.open(map, marker);
     marker.setIcon();
 
@@ -169,6 +169,20 @@ function change_color(restaurant_id){
     marker.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 }
 
+
+function resize_map(){
+
+    google.maps.event.trigger(map, "resize");
+    map.fitBounds(bounds);
+    // var content = info_window.getContent();
+    if(info_window.getMap() !== null && typeof map !== "undefined"){
+        info_window.close();
+        // info_window.setContent(content[0]);
+        info_window.open(map, markers[active_marker]);
+    }
+
+
+}
 
 
 function clear_markers(){

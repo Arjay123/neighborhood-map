@@ -63,7 +63,7 @@ function ViewModel(categories){
     }
 
     self.toggleNavbar = function(){
-        $("#navbar").toggle("slide", 300);
+        $("#navbar").toggle("slide", 300, resize_map);
     };
 
     self.get_fav_by_id = function(id){

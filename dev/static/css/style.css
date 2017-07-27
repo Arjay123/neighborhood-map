@@ -22,22 +22,29 @@ html {
 
 #map { 
     height: 100%; 
+    /*width: 100%;*/
+    position: relative;
 }
 
 #pano {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
 }
 
+
+
 .navbar {
-    width: 70%;
+    /*width: 70%;*/
     height: 100%;
     float: left;
     box-shadow: 0 -0 24px rgba(0,0,0,0.5);
     background-color: #3E92CC;
     color: #EAFCF3;
     display: block;
+}
 
+.content {
+    /*width: 100%;*/
 }
 
 .navbar-hdr {
