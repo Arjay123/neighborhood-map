@@ -3,14 +3,15 @@ var info_window;
 var active_marker;
 var sv_service;
 var pano;
-
+var SANJOSE_COORD = {lat: 37.3382, lng: -121.8863};
+var DEFAULT_ZOOM = 11;
 var markers = {};
 
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11,
-        center: {lat: 37.3382, lng: -121.8863},
+        zoom: DEFAULT_ZOOM,
+        center: SANJOSE_COORD,
     });
     info_window = new google.maps.InfoWindow();
     sv_service = new google.maps.StreetViewService();
@@ -20,6 +21,13 @@ function initMap() {
 
 function add_markers(restaurants){
 
+    if(restaurants.length == 0){
+        map.setOptions({
+            zoom: DEFAULT_ZOOM,
+            center: SANJOSE_COORD,
+        });
+        return;
+    }
 
     var bounds = new google.maps.LatLngBounds();
 
@@ -30,8 +38,6 @@ function add_markers(restaurants){
             map: map,
             animation: google.maps.Animation.DROP
         });
-
-        
 
         
 

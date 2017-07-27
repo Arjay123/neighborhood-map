@@ -181,12 +181,23 @@ function ViewModel(categories){
 
     self.fav_click = function(element){
 
-        $("#favorites").slideToggle();
         self.fav_shown(!self.fav_shown());
+        $("#favorites").slideToggle();
+        clear_markers();
+        if(self.fav_shown()){
+            add_markers(self.favorites());
+        }
+        else {
+            add_markers(self.restaurant_list());
+        }
+        
         
     };
 
     self.show_cat = function(){
+        self.restaurant_list.removeAll();
+        clear_markers();
+        add_markers(self.restaurant_list());
         self.selected_view("categories");
     };
 
