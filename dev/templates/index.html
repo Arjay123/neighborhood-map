@@ -43,7 +43,12 @@
     </div>
 
     <div class="content">
-        <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
+        <div class="toggle-hdr">
+            <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
+        </div>
+        <div id="map">
+
+        </div>
     </div>
 
 
@@ -85,7 +90,7 @@
         <div class="navbar-menu-items" data-bind="foreach: list">
             <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
             <div class="navbar-menu-item restaurant-menu-item">
-                <div class="restaurant flex-container pointer" data-bind="click: $root.restaurant_clicked">
+                <div class="restaurant flex-container pointer" data-bind="click: $root.restaurant_clicked, event: { mouseenter: toggle_marker_bounce, mouseleave: toggle_marker_bounce } ">
                     <img class="restaurant-img" data-bind="attr: { src: img }">
                     <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
@@ -111,9 +116,13 @@
                 </div>
             </div>
         </div>
-
-
     </script>
+
+
+
+
+
+
 
     <script type="text/html" id="rating_5">
         <img src="{{url_for('static', filename='img/small_5.png')}}">
@@ -151,6 +160,10 @@
         <img src="{{url_for('static', filename='img/small_1.png')}}">
     </script>
 
+    <script type="text/html" id="rating">
+        <img src="{{url_for('static', filename='img/small_1.png')}}">
+    </script>
+
     <script type="text/html" id="rating_0">
         <img src="{{url_for('static', filename='img/small_0.png')}}">
     </script>
@@ -159,9 +172,12 @@
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBC7k62ES7aKSRD9iXmiYnrEufL5XyS1p4&&libraries=places&callback=initMap"></script>
     <!-- build:js -->
     <script src="{{url_for('static', filename='js/keys.js')}}"></script>
+    
     <script src="{{url_for('static', filename='js/app.js')}}"></script>
+    <script src="{{url_for('static', filename='js/map.js')}}"></script>
     <!-- endbuild -->
     
 </body>

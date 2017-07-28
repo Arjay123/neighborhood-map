@@ -1,4 +1,4 @@
-function Restaurant(name, price, category, rating, review_ct, img, location, url, id, favorite=false){
+function Restaurant(name, price, category, rating, review_ct, img, coordinates, url, id, favorite=false){
     var self = this;
 
     this.name = name;
@@ -7,7 +7,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
     this.rating = rating;
     this.review_ct = review_ct;
     this.img = img;
-    this.location = location;
+    this.coordinates = coordinates;
     this.url = url;
     this.id = id;
     this.favorite = ko.observable(favorite);
@@ -24,7 +24,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
             "rating": self.rating,
             "review_ct": self.review_ct,
             "img": self.img,
-            "location": self.location,
+            "coordinates": self.coordinates,
             "url": self.url,
             "id": self.id,
             "favorite": self.favorite()
@@ -33,7 +33,7 @@ function Restaurant(name, price, category, rating, review_ct, img, location, url
 }
 
 Restaurant.deserialize = function(obj){
-    return new Restaurant(obj.name, obj.price, obj.category, obj.rating, obj.review_ct, obj.img, obj.location, obj.url, obj.id, obj.favorite);
+    return new Restaurant(obj.name, obj.price, obj.category, obj.rating, obj.review_ct, obj.img, obj.coordinates, obj.url, obj.id, obj.favorite);
 };
 
 
@@ -63,7 +63,7 @@ function ViewModel(categories){
     }
 
     self.toggleNavbar = function(){
-        $("#navbar").toggle("slide", 300);
+        $("#navbar").toggle("slide", 300, resize_map);
     };
 
     self.get_fav_by_id = function(id){
@@ -106,7 +106,6 @@ function ViewModel(categories){
     self.yelp_ajax = function(category, offset){
 
         
-
         self.restaurant_list.removeAll();
         $.ajax("/yelp?category=" + category + "&offset=" + offset, {
             success: function(response, status, test){
@@ -124,7 +123,7 @@ function ViewModel(categories){
                                                     curr["rating"],
                                                     curr["review_count"],
                                                     curr["image_url"],
-                                                    curr["location"],
+                                                    curr["coordinates"],
                                                     curr["url"],
                                                     curr["id"]);
 
@@ -141,6 +140,9 @@ function ViewModel(categories){
                     }
                     
                 };
+
+                clear_markers();
+                add_markers(self.restaurant_list());
 
                 self.selected_view("restaurants");
                 
@@ -173,19 +175,38 @@ function ViewModel(categories){
     };
 
     self.restaurant_clicked = function(element){
-        console.log(element);
+        show_restaurant_window(element);
     };
 
 
     self.fav_click = function(element){
 
-        $("#favorites").slideToggle();
         self.fav_shown(!self.fav_shown());
+        $("#favorites").slideToggle();
+        clear_markers();
+        if(self.fav_shown()){
+            add_markers(self.favorites());
+        }
+        else {
+            add_markers(self.restaurant_list());
+        }
+        
         
     };
 
     self.show_cat = function(){
+        self.restaurant_list.removeAll();
+        clear_markers();
+        add_markers(self.restaurant_list());
         self.selected_view("categories");
+    };
+
+    self.animate_marker = function(item){
+        console.log(item);
+    };
+
+    self.unanimate_marker = function(item){
+        console.log(item);
     };
 
     self.fav_menu_icon = ko.pureComputed(function(){
@@ -221,3 +242,7 @@ $.ajax("/categories", {
         ko.applyBindings(new ViewModel(categories));
     }
 });
+
+
+
+
