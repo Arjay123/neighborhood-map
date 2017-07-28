@@ -43,7 +43,19 @@ def yelp_api():
         headers={'Authorization': 'bearer %s' % YELP_API_KEY})
     print("test")
 
-    return r.text
+    response = {
+        "status": 200,
+        "data": r.text
+    }
+
+    if(r.status_code != 200):
+        response = {
+            "status": r.status_code,
+            "data": "Could not retrieve restaurants from Yelp"
+        }
+    
+
+    return json.dumps(response)
 
 
 @app.route("/yelp_business")
@@ -64,12 +76,21 @@ def get_business():
         "data": r.text
     }
 
+    if(r.status_code != 200):
+        response = {
+            "status": r.status_code,
+            "data": "Could not retrieve restaurant info from yelp"
+        }
+    
+
     return json.dumps(response)
+
 
 
 @app.route("/img/<filename>")
 def get_img(filename):
     pass
+
 
 @app.route("/categories")
 def get_yelp_food_categories():

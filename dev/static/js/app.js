@@ -51,6 +51,7 @@ function ViewModel(categories){
     self.total_current_restaurants = 0;
     self.prev_available = ko.observable(false);
     self.next_available = ko.observable(false);
+    self.error_msg = ko.observable("");
 
     
 
@@ -112,11 +113,18 @@ function ViewModel(categories){
 
                 response = $.parseJSON(response);
 
-                self.total_current_restaurants = response["total"];
+                if(response["status"] != 200){
+                    self.error_msg("Error " + response["status"] + ": " + response["data"]);
+                    self.selected_view("error");
+                    return;
+                }
+
+                data = $.parseJSON(response["data"]);
+                self.total_current_restaurants = data["total"];
                 self.set_next_available();
                 self.set_prev_available();
-                for(index in response["businesses"]){
-                    var curr = response["businesses"][index]
+                for(index in data["businesses"]){
+                    var curr = data["businesses"][index]
                     var restaurant = new Restaurant(curr["name"], 
                                                     curr["price"],
                                                     curr["categories"][0]["title"],

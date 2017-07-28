@@ -31,12 +31,13 @@
             </div>
             <div class="line-break"></div>
 
-            <!-- ko if: selected_view() == "categories" -->
-            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view }"></div>
-            <!-- /ko -->
+            
 
             <!-- ko if: selected_view() == "restaurants" -->
             <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view, data: { list: restaurant_list, fav_list: false } }"></div>
+            <!-- /ko -->
+            <!-- ko ifnot: selected_view() == "restaurants" -->
+            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view }"></div>
             <!-- /ko -->
 
         </div>
@@ -58,7 +59,12 @@
 
 
 
-
+    <script type="text/html" id="error">
+        <div class="navbar-hdr flex-container">
+            <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.show_cat"></i>
+            <h5 class="flex-item text-center" data-bind="text: error_msg"></h5>
+        </div>
+    </script>
 
 
     <script type="text/html" id="categories">
