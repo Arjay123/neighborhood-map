@@ -65,7 +65,7 @@ def get_business():
     if not business_id:
         return "No id selected"
 
-    endpoint = "https://api.yelp.com/v3/businesses/"
+    endpoint = "https://ai.yelp.com/v3/businesses/"
     query = endpoint + business_id
 
     r = requests.get(query,

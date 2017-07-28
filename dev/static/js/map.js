@@ -92,6 +92,12 @@ function create_window(restaurant){
     $.ajax("/yelp_business?id=" + restaurant.id, {
         success: function(response, status){
             response = $.parseJSON(response);
+            if(response["status"] != 200){
+
+                show_error_window(restaurant.id, response["status"], response["data"]);
+                return;
+            }
+
             console.log(response);
             data = $.parseJSON(response["data"]);
 
@@ -105,6 +111,18 @@ function create_window(restaurant){
     });
 
 };
+
+function show_error_window(restaurant_id, status, error_msg){
+
+    var marker = markers[restaurant_id];
+
+    var content = $("<div id='info_window'>" +
+                                "<p>Error " + status + ": " + error_msg + "</p>" +
+                            "</div>");
+    info_window.close();
+    info_window.setContent(content[0]);
+    info_window.open(map, marker);
+}
 
 function show_window(restaurant, address, phone, hours){
 
