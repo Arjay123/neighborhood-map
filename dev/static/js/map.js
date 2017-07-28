@@ -1,13 +1,16 @@
-var map;
-var info_window;
-var active_marker;
-var sv_service;
-var pano;
-var SANJOSE_COORD = {lat: 37.3382, lng: -121.8863};
-var DEFAULT_ZOOM = 11;
-var markers = {};
-var bounds;
+var map; // google maps map object
+var info_window; // info window, only one will be displayed at any time
+var active_marker; // id of currently active marker
+var sv_service; // google streetview service object
+var pano; // google streetview panorama container
+var SANJOSE_COORD = {lat: 37.3382, lng: -121.8863}; // default map coordinates
+var DEFAULT_ZOOM = 11; // default map zoom
+var markers = {}; // dictionary of all currently visible markers
+var bounds; // google maps bounds object
 
+
+// initialize google maps service
+//
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -18,9 +21,13 @@ function initMap() {
     sv_service = new google.maps.StreetViewService();
 }
 
-
+// create markers on map for every restaurant in list
+//
+// restaurants - list of restaurant objects to create markers for
+//
 function add_markers(restaurants){
 
+    // if no restaurants passed, reset to default map view
     if(restaurants.length == 0){
         map.setOptions({
             zoom: DEFAULT_ZOOM,
@@ -29,6 +36,7 @@ function add_markers(restaurants){
         return;
     }
 
+    // reset map bounds
     bounds = new google.maps.LatLngBounds();
 
     restaurants.forEach(function(restaurant){
@@ -40,7 +48,6 @@ function add_markers(restaurants){
         });
 
         
-
         new_marker.addListener("click", function(){
             show_restaurant_window(restaurant);
         });
@@ -53,19 +60,27 @@ function add_markers(restaurants){
             new_marker.setAnimation(null);
         });
 
+        // add new marker to list of markers
         markers[restaurant.id] = new_marker;
+
+        // extend map bounds to include new marker
         bounds.extend(new_marker.position);
     });
 
     map.fitBounds(bounds);
 };
 
-
+// change which marker is currently active
+//
+// id - id of new active marker
+//
 function change_active_marker(id){
     reset_active_marker();
     active_marker = id;
 };
 
+// reset active marker icon to default 'non-active' marker
+//
 function reset_active_marker(){
     if(active_marker in markers){
         var marker = markers[active_marker];
@@ -74,6 +89,10 @@ function reset_active_marker(){
     
 };
 
+// show restaurants information in an info window, set marker to active
+// 
+// restaurant - restaurant object to display detailed info
+//
 function show_restaurant_window(restaurant){
 
     if(!(restaurant.id in markers)){
@@ -86,19 +105,23 @@ function show_restaurant_window(restaurant){
     change_color(restaurant.id);
 };
 
-
+// create more detailed restaurant info window using yelp data
+//
+// restaurant - restaurant object
+//
 function create_window(restaurant){
 
+    // request more detailed restaurant data using yelp business api endpoint
     $.ajax("/yelp_business?id=" + restaurant.id, {
         success: function(response, status){
             response = $.parseJSON(response);
-            if(response["status"] != 200){
 
+            // show error window if request failed
+            if(response["status"] != 200){
                 show_error_window(restaurant.id, response["status"], response["data"]);
                 return;
             }
 
-            console.log(response);
             data = $.parseJSON(response["data"]);
 
             var address = data["location"]["display_address"];
@@ -112,6 +135,12 @@ function create_window(restaurant){
 
 };
 
+// set info window to display an error
+//
+// restaurant_id - id of marker to display info window at
+// status - status code of error
+// error_msg - error message
+//
 function show_error_window(restaurant_id, status, error_msg){
 
     var marker = markers[restaurant_id];
@@ -124,10 +153,16 @@ function show_error_window(restaurant_id, status, error_msg){
     info_window.open(map, marker);
 }
 
+// set info window to display more detailed restaurant data
+//
+// restaurant - restaurant object
+// address - address of restaurant
+// phone - phone number of restaurant
+// hours - hours of operation for restaurant
+//
 function show_window(restaurant, address, phone, hours){
 
     var marker = markers[restaurant.id];
-    
     
     var details_html = "<table>";
 
@@ -156,7 +191,7 @@ function show_window(restaurant, address, phone, hours){
     info_window.open(map, marker);
     marker.setIcon();
 
-
+    // get nearest google streetview panorama to restaurant location and display in infowindow
     var rest_location = new google.maps.LatLng(restaurant.coordinates.latitude, restaurant.coordinates.longitude)
     pano = new google.maps.StreetViewPanorama(document.getElementById("pano"));
 
@@ -174,37 +209,41 @@ function show_window(restaurant, address, phone, hours){
                                     pano.setVisible(true);
 
                                 } else {
+
                                     pano.setVisible(false);
+
                                 }
                             });
     map.setStreetView(pano);
 
 }
 
-
+// change color of marker to yellow
+//
+// restaurant_id - id of marker to change color
+//
 function change_color(restaurant_id){
     var marker = markers[restaurant_id];
     marker.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 }
 
-
+// resize map to fit its current container
+//
 function resize_map(){
 
     google.maps.event.trigger(map, "resize");
     if(bounds)
         map.fitBounds(bounds);
-    // var content = info_window.getContent();
 
     if(info_window.getMap() !== null && typeof info_window.getMap() !== "undefined"){
         info_window.close();
-        // info_window.setContent(content[0]);
         info_window.open(map, markers[active_marker]);
     }
 
-
 }
 
-
+// clear all currently visible map markers
+//
 function clear_markers(){
     for(var key in markers){
         markers[key].setMap(null);
@@ -212,7 +251,10 @@ function clear_markers(){
     markers = {};
 };
 
-
+// toggle marker's bounce animation
+//
+// restaurant - restaurant to toggle marker animation
+//
 function toggle_marker_bounce(restaurant){
     if(!(restaurant.id in markers)){
         console.log("can't change animation, marker not present");
