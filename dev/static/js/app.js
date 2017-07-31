@@ -161,26 +161,26 @@ function ViewModel(categories){
     self.next_available = ko.observable(false); // whether there are restaurants after the current list to retrieve
     self.error_msg = ko.observable(""); // error message in case of yelp api request failures
     self.category_list = ko.observableArray(Object.keys(self.categories)); // list of categories
-    self.selected_option = ko.observable(self.options()[0]["val"]); // current selected filter option
     self.options = ko.observableArray([{text: "Price Filter", val: 0}, // list of filter options
                                        {text: "$", val: 1},
                                        {text: "$$", val: 2},
                                        {text: "$$$", val: 3},
                                        {text: "$$$$", val: 4}]);
-
+    self.selected_option = ko.observable(self.options()[0]["val"]); // current selected filter option
 
     // load users favorite restaurants from local storage
+    let add_fav = function(fav){
+        self.favorites.push(Restaurant.deserialize(fav));
+    };
+
     let prev_favs = JSON.parse(localStorage.getItem("favorites"));
-    for(let i in prev_favs){
-        self.favorites.push(Restaurant.deserialize(prev_favs[i]));
-    }
+    if(prev_favs == null)
+        default_favs.forEach(add_fav);
+    else
+        prev_favs.forEach(add_fav);
 
     // if first time use, insert default favorites to showcase feature
-    if(prev_favs == null){
-        for(let i in default_favs){
-            self.favorites.push(Restaurant.deserialize(default_favs[i]));
-        }
-    }
+
 
     // toggle navbar visibility, only available for viewports of ipad or smaller
     self.toggleNavbar = function(){
@@ -264,8 +264,7 @@ function ViewModel(categories){
                 self.total_current_restaurants = data["total"];
                 self.set_next_available();
                 self.set_prev_available();
-                for(index in data["businesses"]){
-                    let curr = data["businesses"][index]
+                data["businesses"].forEach(function(curr){
                     let restaurant = new Restaurant(curr["name"],
                                                     curr["price"],
                                                     curr["categories"][0]["title"],
@@ -284,8 +283,7 @@ function ViewModel(categories){
                     else {
                         self.restaurant_list.push(match);
                     }
-
-                };
+                });
 
                 // display markers for restaurant in google map
                 clear_markers();
@@ -387,8 +385,7 @@ $.ajax("/categories", {
         cats = $.parseJSON(data);
         categories = {};
 
-        for(key in cats){
-            let item = cats[key];
+        cats.forEach(function(item){
             if ($.inArray("food", item["parents"]) != -1 ||
                 $.inArray("restaurants", item["parents"]) != -1) {
 
@@ -405,7 +402,8 @@ $.ajax("/categories", {
                 if (add)
                     categories[item["title"]] = item["alias"];
             }
-        }
+        });
+
         ko.applyBindings(new ViewModel(categories));
     },
     error: function(jqXHR, textStatus, errorThrown){

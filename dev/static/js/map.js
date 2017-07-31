@@ -277,7 +277,8 @@ function resize_map(){
 //
 function clear_markers(){
     for(let key in markers){
-        markers[key].setMap(null);
+        if(markers.hasOwnProperty(key))
+            markers[key].setMap(null);
     };
     markers = {};
 }
