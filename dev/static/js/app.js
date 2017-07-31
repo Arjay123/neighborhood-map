@@ -11,7 +11,7 @@
 // favorite - bool value whether restaurant has been favorited by the user
 //
 function Restaurant(name, price, category, rating, review_ct, img, coordinates, url, id, favorite=false){
-    var self = this;
+    let self = this;
 
     this.name = name;
     this.price = price;
@@ -61,7 +61,7 @@ Restaurant.deserialize = function(obj){
 };
 
 
-var default_favs = [
+const default_favs = [
   {
     "name": "La Costa",
     "price": "$",
@@ -140,13 +140,13 @@ var default_favs = [
 ];
 
 // ko viewmodel
-// 
+//
 // params:
 //      categories - list of food categories from yelp's api service
 //
 function ViewModel(categories){
 
-    var self = this;
+    let self = this;
 
     self.categories = categories; // list of categories
     self.restaurant_list = ko.observableArray(); // current list of restaurants to be displayed in navbar list
@@ -161,22 +161,26 @@ function ViewModel(categories){
     self.next_available = ko.observable(false); // whether there are restaurants after the current list to retrieve
     self.error_msg = ko.observable(""); // error message in case of yelp api request failures
     self.category_list = ko.observableArray(Object.keys(self.categories)); // list of categories
-    self.options = ko.observableArray([{text: "Price Filter", val: 0}, {text: "$", val: 1}, {text: "$$", val: 2}, {text: "$$$", val: 3}, {text: "$$$$", val: 4}]);
-    self.selected_option = ko.observable(self.options()[0]["val"]);
+    self.options = ko.observableArray([{text: "Price Filter", val: 0}, // list of filter options
+                                       {text: "$", val: 1},
+                                       {text: "$$", val: 2},
+                                       {text: "$$$", val: 3},
+                                       {text: "$$$$", val: 4}]);
+
+    self.selected_option = ko.observable(self.options()[0]["val"]); // current selected filter option
 
     // load users favorite restaurants from local storage
-    var prev_favs = JSON.parse(localStorage.getItem("favorites"));
-    for(var i in prev_favs){
+    let prev_favs = JSON.parse(localStorage.getItem("favorites"));
+    for(let i in prev_favs){
         self.favorites.push(Restaurant.deserialize(prev_favs[i]));
     }
 
+    // if first time use, insert default favorites to showcase feature
     if(prev_favs == null){
-        for(var i in default_favs){
+        for(let i in default_favs){
             self.favorites.push(Restaurant.deserialize(default_favs[i]));
         }
     }
-
-
 
     // toggle navbar visibility, only available for viewports of ipad or smaller
     self.toggleNavbar = function(){
@@ -205,7 +209,7 @@ function ViewModel(categories){
     // get next listings from yelp api
     self.get_next_listings = function(){
 
-        var offset = ++self.page * self.list_per_page;
+        let offset = ++self.page * self.list_per_page;
         self.yelp_ajax(self.current_category, offset);
         self.yelp_ajax(self.current_category, offset, self.selected_option());
 
@@ -214,7 +218,7 @@ function ViewModel(categories){
     // get previous lists from yelp api
     self.get_prev_listings = function(){
 
-        var offset = --self.page * self.list_per_page;
+        let offset = --self.page * self.list_per_page;
         self.yelp_ajax(self.current_category, offset, self.selected_option());
 
     };
@@ -234,11 +238,11 @@ function ViewModel(categories){
 
     // retrieve restaurant results based on category and offset
     self.yelp_ajax = function(category, offset, price=0){
-        
-        // clear current restaurant list        
+
+        // clear current restaurant list
         self.restaurant_list.removeAll();
         category = self.categories[category];
-        var url = "/yelp?category=" + category + "&offset=" + offset;
+        let url = "/yelp?category=" + category + "&offset=" + offset;
 
         if(price !== 0)
             url += "&price=" + price;
@@ -261,8 +265,8 @@ function ViewModel(categories){
                 self.set_next_available();
                 self.set_prev_available();
                 for(index in data["businesses"]){
-                    var curr = data["businesses"][index]
-                    var restaurant = new Restaurant(curr["name"], 
+                    let curr = data["businesses"][index]
+                    let restaurant = new Restaurant(curr["name"],
                                                     curr["price"],
                                                     curr["categories"][0]["title"],
                                                     curr["rating"],
@@ -273,14 +277,14 @@ function ViewModel(categories){
                                                     curr["id"]);
 
                     // if restaurant is in user favorites, use that restaurant object instead
-                    var match = self.get_fav_by_id(restaurant.id);
+                    let match = self.get_fav_by_id(restaurant.id);
                     if (!match){
                         self.restaurant_list.push(restaurant);
                     }
                     else {
                         self.restaurant_list.push(match);
                     }
-                    
+
                 };
 
                 // display markers for restaurant in google map
@@ -289,10 +293,10 @@ function ViewModel(categories){
 
                 // set navbar template to restaurant list
                 self.selected_view("restaurants");
-                
+
                 // auto scroll to top of navbar
                 $("#navbar-scroll-div").scrollTop(0);
-                
+
             },
             error: function(jqXHR, textStatus, errorThrown){
                 alert("Not able to retrieve restaurants from Yelp API");
@@ -305,7 +309,7 @@ function ViewModel(categories){
     // toggle restaurant favorite setting
     self.toggle_favorite = function(obj){
 
-        var match =self.get_fav_by_id(obj.id);
+        let match =self.get_fav_by_id(obj.id);
         if(!match){
             self.favorites.push(obj);
         }
@@ -314,8 +318,8 @@ function ViewModel(categories){
         }
 
         obj.favorite(!obj.favorite());
-        
-        var store_favs = [];
+
+        let store_favs = [];
         ko.utils.arrayForEach(self.favorites(), function(item) {
             store_favs.push(item.serialize());
         });
@@ -384,13 +388,13 @@ $.ajax("/categories", {
         categories = {};
 
         for(key in cats){
-            var item = cats[key];
-            if ($.inArray("food", item["parents"]) != -1 || 
+            let item = cats[key];
+            if ($.inArray("food", item["parents"]) != -1 ||
                 $.inArray("restaurants", item["parents"]) != -1) {
 
-                var add = true
+                let add = true
 
-                if ("country_whitelist" in item) 
+                if ("country_whitelist" in item)
                     if ($.inArray("US", item["country_whitelist"]) == -1)
                         add = false;
 

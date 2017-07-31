@@ -94,7 +94,7 @@
         <div class="navbar-menu-items" data-bind="foreach: list">
             <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
             <div class="navbar-menu-item restaurant-menu-item">
-                <div class="restaurant flex-container pointer" data-bind="click: $root.restaurant_clicked, event: { mouseenter: toggle_marker_bounce, mouseleave: toggle_marker_bounce } ">
+                <div class="restaurant flex-container pointer" data-bind="click: $root.restaurant_clicked, event: { mouseenter: marker_bounce_on, mouseleave: marker_bounce_off } ">
                     <img class="restaurant-img" data-bind="attr: { src: img }">
                     <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
