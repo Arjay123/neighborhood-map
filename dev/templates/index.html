@@ -78,7 +78,7 @@
         <!-- ko ifnot: $data.fav_list -->
         <div class="navbar-hdr flex-container">
             <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.show_cat"></i>
-            <h4 class="flex-item text-center" data-bind="text: $root.current_category"></h4>
+            <h4 class="flex-item text-center" data-bind="text: $root.current_category "></h4>
             <select data-bind="options: $root.options, optionsText: 'text', optionsValue: 'val', value: $root.selected_option">
             </select>
         </div>

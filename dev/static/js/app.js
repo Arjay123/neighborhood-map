@@ -227,7 +227,7 @@ function ViewModel(categories){
         }
 
         self.page = 0;
-        self.current_category = self.categories[element];
+        self.current_category = element;
         self.yelp_ajax(self.current_category, 0, self.selected_option());
 
     };
@@ -237,6 +237,7 @@ function ViewModel(categories){
         
         // clear current restaurant list        
         self.restaurant_list.removeAll();
+        category = self.categories[category];
         var url = "/yelp?category=" + category + "&offset=" + offset;
 
         if(price !== 0)
@@ -353,6 +354,7 @@ function ViewModel(categories){
         add_markers(self.restaurant_list());
         self.selected_view("categories");
     };
+
 
     // favorite menu toggle icon
     self.fav_menu_icon = ko.pureComputed(function(){
