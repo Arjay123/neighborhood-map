@@ -138,6 +138,10 @@ html {
     align-items: center;
 }
 
+.restaurant-details {
+    align-items: flex-start;
+}
+
 .navbar-link {
     text-decoration: none;
     color: #EAFCF3;

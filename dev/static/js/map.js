@@ -156,6 +156,22 @@ function show_error_window(restaurant_id, status, error_msg){
     info_window.open(map, marker);
 }
 
+var days = {
+    "0": "Mon",
+    "1": "Tue",
+    "2": "Wed",
+    "3": "Thu",
+    "4": "Fri",
+    "5": "Sat",
+    "6": "Sun",
+}
+
+function create_hour_text(day){
+    return days[day["day"]] + ": " + 
+               day["start"].slice(0, 2) + ":" + day["start"].slice(2, 4) + " - " +
+               day["end"].slice(0, 2) + ":" + day["end"].slice(2, 4);
+}
+
 // set info window to display more detailed restaurant data
 //
 // restaurant - restaurant object
@@ -167,27 +183,34 @@ function show_window(restaurant, address, phone, hours){
 
     var marker = markers[restaurant.id];
     
-    var details_html = "<table>";
+    var details_html = "<div class='flex-item'><table>";
 
     address.forEach(function(line){
         details_html += "<tr><td>" + line + "</td></tr>";
     });
 
     details_html += "<tr><td>" + phone + "</td></tr>";
-    details_html += "</table>";
+    details_html += "<tr><td><a href='" + restaurant.url + "'>View on Yelp</a></td></tr>";
+    details_html += "</table></div>";
+
+    var hours_html = "<div class='flex-item'><table>";
+
+    hours[0]["open"].forEach(function(day){
+        hours_html += "<tr><td>" + create_hour_text(day) + "</td></tr>"
+    });
+
+    hours_html += "</table></div>";
 
     var content = $("<div id='info_window'>" + 
                       "<div class='info-window-hdr'>" + 
                           "<h3>" + restaurant.name + "</h3>" +
                       "</div>" + 
-                      "<div class='restaurant-details'>" + 
-                          details_html +
+                      "<div class='flex-container restaurant-details'>" + 
+                          details_html + hours_html +
                       "</div>" + 
                       "<div id='pano'>" +
                       "</div>" +
                     "</div>");
-
-
 
     info_window.close();
     info_window.setContent(content[0]);
