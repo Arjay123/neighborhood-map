@@ -7,7 +7,7 @@ var SANJOSE_COORD = {lat: 37.3382, lng: -121.8863}; // default map coordinates
 var DEFAULT_ZOOM = 11; // default map zoom
 var markers = {}; // dictionary of all currently visible markers
 var bounds; // google maps bounds object
-
+var deferred = $.Deferred(); // Deferred object to notify KO that map is done loading
 
 // initialize google maps service
 //
@@ -19,6 +19,8 @@ function initMap() {
     });
     info_window = new google.maps.InfoWindow();
     sv_service = new google.maps.StreetViewService();
+    
+    deferred.resolve();
 }
 
 // create markers on map for every restaurant in list
@@ -210,9 +212,8 @@ function show_window(restaurant, address, phone, hours){
                                     pano.setVisible(true);
 
                                 } else {
-
                                     pano.setVisible(false);
-
+                                    $("#pano").html("<h3>Could not find a nearby streetview for this address</h3>");
                                 }
                             });
     map.setStreetView(pano);

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title></title>
+    <title>San Jose Food Map</title>
 
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
@@ -19,7 +19,7 @@
     
     <div id="navbar" class="navbar">
         <div class="navbar-hdr flex-container">
-            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="text-center flex-item">Neighborhood Map</h3>
+            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="text-center flex-item">San Jose Food Map</h3>
         </div>
         <div class="line-break"></div>
         <div class="navbar-content" id="navbar-scroll-div">
@@ -51,11 +51,6 @@
 
         </div>
     </div>
-
-
-
-
-
 
 
 
@@ -181,7 +176,6 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBC7k62ES7aKSRD9iXmiYnrEufL5XyS1p4&&libraries=places&callback=initMap"></script>
     <!-- build:js -->
     <script src="{{url_for('static', filename='js/keys.js')}}"></script>
-    
     <script src="{{url_for('static', filename='js/app.js')}}"></script>
     <script src="{{url_for('static', filename='js/map.js')}}"></script>
     <!-- endbuild -->

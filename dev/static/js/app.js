@@ -60,6 +60,85 @@ Restaurant.deserialize = function(obj){
                           obj.favorite);
 };
 
+
+var default_favs = [
+  {
+    "name": "La Costa",
+    "price": "$",
+    "category": "Mexican",
+    "rating": 4,
+    "review_ct": 734,
+    "img": "https://s3-media1.fl.yelpcdn.com/bphoto/Y1D6LpW6JtkzhSBPEI3iCg/o.jpg",
+    "coordinates": {
+      "latitude": 37.35413,
+      "longitude": -121.85363
+    },
+    "url": "https://www.yelp.com/biz/la-costa-san-jose-2?adjust_creative=kPuE2LrVTUv5F9…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA",
+    "id": "la-costa-san-jose-2",
+    "favorite": true
+  },
+  {
+    "name": "i-Tea",
+    "price": "$",
+    "category": "Bubble Tea",
+    "rating": 4.5,
+    "review_ct": 242,
+    "img": "https://s3-media2.fl.yelpcdn.com/bphoto/Nhc9VcNEILbO6uXjGquo7g/o.jpg",
+    "coordinates": {
+      "latitude": 37.312231523169,
+      "longitude": -121.809779829623
+    },
+    "url": "https://www.yelp.com/biz/i-tea-san-jose?adjust_creative=kPuE2LrVTUv5F9bQgA6…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA",
+    "id": "i-tea-san-jose",
+    "favorite": true
+  },
+  {
+    "name": "Rangoli India Restaurant",
+    "price": "$$",
+    "category": "Indian",
+    "rating": 3.5,
+    "review_ct": 1001,
+    "img": "https://s3-media2.fl.yelpcdn.com/bphoto/CCvYbOFGvPdS4gtqOjty7g/o.jpg",
+    "coordinates": {
+      "latitude": 37.2605099,
+      "longitude": -121.93186
+    },
+    "url": "https://www.yelp.com/biz/rangoli-india-restaurant-san-jose?adjust_creative=…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA",
+    "id": "rangoli-india-restaurant-san-jose",
+    "favorite": true
+  },
+  {
+    "name": "Pho Y #1",
+    "price": "$",
+    "category": "Vietnamese",
+    "rating": 4,
+    "review_ct": 1058,
+    "img": "https://s3-media1.fl.yelpcdn.com/bphoto/RgC-icTIQWN2l3qeCrjx-Q/o.jpg",
+    "coordinates": {
+      "latitude": 37.306181,
+      "longitude": -121.81068
+    },
+    "url": "https://www.yelp.com/biz/pho-y-1-san-jose?adjust_creative=kPuE2LrVTUv5F9bQg…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA",
+    "id": "pho-y-1-san-jose",
+    "favorite": true
+  },
+  {
+    "name": "Milohas",
+    "price": "$",
+    "category": "Bakeries",
+    "rating": 4.5,
+    "review_ct": 415,
+    "img": "https://s3-media2.fl.yelpcdn.com/bphoto/8-pmaw3IAnxAuehCv4JL-g/o.jpg",
+    "coordinates": {
+      "latitude": 37.2556595,
+      "longitude": -121.8970034
+    },
+    "url": "https://www.yelp.com/biz/milohas-san-jose?adjust_creative=kPuE2LrVTUv5F9bQg…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA",
+    "id": "milohas-san-jose",
+    "favorite": true
+  }
+];
+
 // ko viewmodel
 // 
 // params:
@@ -88,6 +167,14 @@ function ViewModel(categories){
     for(var i in prev_favs){
         self.favorites.push(Restaurant.deserialize(prev_favs[i]));
     }
+
+    if(prev_favs == null){
+        for(var i in default_favs){
+            self.favorites.push(Restaurant.deserialize(default_favs[i]));
+        }
+    }
+
+
 
     // toggle navbar visibility, only available for viewports of ipad or smaller
     self.toggleNavbar = function(){
@@ -135,7 +222,7 @@ function ViewModel(categories){
         if(self.fav_shown()){
             self.fav_click();
         }
-        
+
         self.page = 0;
         self.current_category = self.categories[element];
         self.yelp_ajax(self.current_category, 0);
@@ -143,7 +230,6 @@ function ViewModel(categories){
     };
 
     // retrieve restaurant results based on category and offset
-    // TODO - add error/fail handler function
     self.yelp_ajax = function(category, offset){
         
         // clear current restaurant list        
@@ -198,7 +284,11 @@ function ViewModel(categories){
                 // auto scroll to top of navbar
                 $("#navbar-scroll-div").scrollTop(0);
                 
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert("Not able to retrieve restaurants from Yelp API");
             }
+
         });
 
     };
@@ -223,6 +313,7 @@ function ViewModel(categories){
 
         localStorage.setItem("favorites", JSON.stringify(store_favs));
         console.log(JSON.parse(localStorage.getItem("favorites")));
+        console.log(localStorage.getItem("favorites"));
     };
 
     // restaurant navbar list item click handler
@@ -259,10 +350,16 @@ function ViewModel(categories){
     self.fav_menu_icon = ko.pureComputed(function(){
         return self.fav_shown() ? "fa fa-angle-double-up fa-2x" : "fa fa-angle-double-down fa-2x"
     }, self);
-    
+
+
+    // show favorites by default once google maps api is loaded
+    deferred.done(function(){
+        self.fav_click();
+    });
 };
 
-// TODO - add error/fail handler function
+
+
 // at app start, retrieve list of available categories
 $.ajax("/categories", {
     success: function(data, status){
@@ -271,7 +368,9 @@ $.ajax("/categories", {
 
         for(key in cats){
             var item = cats[key];
-            if ($.inArray("food", item["parents"]) != -1) {
+            if ($.inArray("food", item["parents"]) != -1 || 
+                $.inArray("restaurants", item["parents"]) != -1) {
+
                 var add = true
 
                 if ("country_whitelist" in item) 
@@ -286,8 +385,10 @@ $.ajax("/categories", {
                     categories[item["title"]] = item["alias"];
             }
         }
-
         ko.applyBindings(new ViewModel(categories));
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+        alert("Not able to retrieve restaurants from Yelp API");
     }
 });
 
