@@ -161,13 +161,13 @@ function ViewModel(categories){
     self.next_available = ko.observable(false); // whether there are restaurants after the current list to retrieve
     self.error_msg = ko.observable(""); // error message in case of yelp api request failures
     self.category_list = ko.observableArray(Object.keys(self.categories)); // list of categories
+    self.selected_option = ko.observable(self.options()[0]["val"]); // current selected filter option
     self.options = ko.observableArray([{text: "Price Filter", val: 0}, // list of filter options
                                        {text: "$", val: 1},
                                        {text: "$$", val: 2},
                                        {text: "$$$", val: 3},
                                        {text: "$$$$", val: 4}]);
 
-    self.selected_option = ko.observable(self.options()[0]["val"]); // current selected filter option
 
     // load users favorite restaurants from local storage
     let prev_favs = JSON.parse(localStorage.getItem("favorites"));
@@ -377,7 +377,7 @@ function ViewModel(categories){
         self.page = 0;
         self.yelp_ajax(self.current_category, self.page, self.selected_option());
     });
-};
+}
 
 
 

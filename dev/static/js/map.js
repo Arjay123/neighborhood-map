@@ -80,7 +80,7 @@ function add_markers(restaurants){
     });
 
     map.fitBounds(bounds);
-};
+}
 
 // change which marker is currently active
 //
@@ -89,7 +89,7 @@ function add_markers(restaurants){
 function change_active_marker(id){
     reset_active_marker();
     active_marker = id;
-};
+}
 
 // reset active marker icon to default 'non-active' marker
 //
@@ -99,7 +99,7 @@ function reset_active_marker(){
         marker.setIcon();
     }
 
-};
+}
 
 // show restaurants information in an info window, set marker to active
 //
@@ -115,7 +115,7 @@ function show_restaurant_window(restaurant){
     change_active_marker(restaurant.id);
     create_window(restaurant);
     change_color(restaurant.id);
-};
+}
 
 // create more detailed restaurant info window using yelp data
 //
@@ -146,7 +146,7 @@ function create_window(restaurant){
         }
     });
 
-};
+}
 
 // set info window to display an error
 //
@@ -280,7 +280,7 @@ function clear_markers(){
         markers[key].setMap(null);
     };
     markers = {};
-};
+}
 
 // turn off marker's bounce animation
 //
@@ -295,7 +295,7 @@ function marker_bounce_off(restaurant){
     let marker = markers[restaurant.id];
     marker.setAnimation(null);
 
-};
+}
 
 // turn on marker's bounce animation
 //
@@ -309,4 +309,4 @@ function marker_bounce_on(restaurant){
 
     let marker = markers[restaurant.id];
     marker.setAnimation(google.maps.Animation.BOUNCE);
-};
+}
