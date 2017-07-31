@@ -173,10 +173,10 @@ function ViewModel(categories){
     };
 
     let prev_favs = JSON.parse(localStorage.getItem('favorites'));
-    if(prev_favs == null)
-        default_favs.forEach(add_fav);
-    else
+    if(prev_favs)
         prev_favs.forEach(add_fav);
+    else
+        default_favs.forEach(add_fav);
 
     // if first time use, insert default favorites to showcase feature
 
@@ -243,7 +243,7 @@ function ViewModel(categories){
         category = self.categories[category];
         let url = '/yelp?category=' + category + '&offset=' + offset;
 
-        if(price !== 0)
+        if(price)
             url += '&price=' + price;
 
         $.ajax(url, {
