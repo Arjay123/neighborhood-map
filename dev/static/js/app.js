@@ -132,6 +132,10 @@ function ViewModel(categories){
     // category clicked event handler, call yelp api service to retrieve restaurants
     self.cat_clicked = function(element){
 
+        if(self.fav_shown()){
+            self.fav_click();
+        }
+        
         self.page = 0;
         self.current_category = self.categories[element];
         self.yelp_ajax(self.current_category, 0);
@@ -139,6 +143,7 @@ function ViewModel(categories){
     };
 
     // retrieve restaurant results based on category and offset
+    // TODO - add error/fail handler function
     self.yelp_ajax = function(category, offset){
         
         // clear current restaurant list        
@@ -257,6 +262,7 @@ function ViewModel(categories){
     
 };
 
+// TODO - add error/fail handler function
 // at app start, retrieve list of available categories
 $.ajax("/categories", {
     success: function(data, status){

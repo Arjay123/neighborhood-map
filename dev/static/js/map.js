@@ -112,6 +112,7 @@ function show_restaurant_window(restaurant){
 function create_window(restaurant){
 
     // request more detailed restaurant data using yelp business api endpoint
+    // TODO - add error/fail handler function
     $.ajax("/yelp_business?id=" + restaurant.id, {
         success: function(response, status){
             response = $.parseJSON(response);
