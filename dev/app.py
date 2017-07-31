@@ -41,6 +41,7 @@ def yelp_api():
 
     category = request.args.get('category', None)
     offset = request.args.get('offset', None)
+    price = request.args.get('price', None)
 
     if not category:
         return json.dumps({
@@ -51,6 +52,9 @@ def yelp_api():
     endpoint = "https://api.yelp.com/v3/businesses/search"
     query = "limit=10&location=San Jose&categories=%s&offset=%s" \
             % (category, offset)
+
+    if price:
+        query += "&price=%s" % price
 
     r = requests.get(endpoint + "?" + query, 
         headers={'Authorization': 'bearer %s' % YELP_API_KEY})

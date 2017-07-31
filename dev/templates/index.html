@@ -77,7 +77,10 @@
     <script type="text/html" id="restaurants">
         <!-- ko ifnot: $data.fav_list -->
         <div class="navbar-hdr flex-container">
-            <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.show_cat"></i><h4 class="flex-item text-center">Restaurants</h4>
+            <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.show_cat"></i>
+            <h4 class="flex-item text-center" data-bind="text: $root.current_category"></h4>
+            <select data-bind="options: $root.options, optionsText: 'text', optionsValue: 'val', value: $root.selected_option">
+            </select>
         </div>
         <div class="flex-container">
             <div data-bind="visible: $root.prev_available, click: $root.get_prev_listings" class="flex-item flex-container ctrl-box pointer">
@@ -96,7 +99,7 @@
                     <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
                         <div data-bind="template: { name: get_rating_template }"></div>
-                        <p class="address"><span data-bind="text: price">$</span> • <span data-bind="text: category">Bakery</span></p>
+                        <p class="address"><span data-bind="text: price"></span> • <span data-bind="text: category"></span></p>
                     </div>             
                 </div>
                 <div class="restaurant-controls flex-container">

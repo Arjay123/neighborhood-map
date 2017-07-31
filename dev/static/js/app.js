@@ -161,6 +161,8 @@ function ViewModel(categories){
     self.next_available = ko.observable(false); // whether there are restaurants after the current list to retrieve
     self.error_msg = ko.observable(""); // error message in case of yelp api request failures
     self.category_list = ko.observableArray(Object.keys(self.categories)); // list of categories
+    self.options = ko.observableArray([{text: "Price Filter", val: 0}, {text: "$", val: 1}, {text: "$$", val: 2}, {text: "$$$", val: 3}, {text: "$$$$", val: 4}]);
+    self.selected_option = ko.observable(self.options()[0]["val"]);
 
     // load users favorite restaurants from local storage
     var prev_favs = JSON.parse(localStorage.getItem("favorites"));
@@ -205,6 +207,7 @@ function ViewModel(categories){
 
         var offset = ++self.page * self.list_per_page;
         self.yelp_ajax(self.current_category, offset);
+        self.yelp_ajax(self.current_category, offset, self.selected_option());
 
     };
 
@@ -212,7 +215,7 @@ function ViewModel(categories){
     self.get_prev_listings = function(){
 
         var offset = --self.page * self.list_per_page;
-        self.yelp_ajax(self.current_category, offset);
+        self.yelp_ajax(self.current_category, offset, self.selected_option());
 
     };
 
@@ -225,16 +228,21 @@ function ViewModel(categories){
 
         self.page = 0;
         self.current_category = self.categories[element];
-        self.yelp_ajax(self.current_category, 0);
+        self.yelp_ajax(self.current_category, 0, self.selected_option());
 
     };
 
     // retrieve restaurant results based on category and offset
-    self.yelp_ajax = function(category, offset){
+    self.yelp_ajax = function(category, offset, price=0){
         
         // clear current restaurant list        
         self.restaurant_list.removeAll();
-        $.ajax("/yelp?category=" + category + "&offset=" + offset, {
+        var url = "/yelp?category=" + category + "&offset=" + offset;
+
+        if(price !== 0)
+            url += "&price=" + price;
+
+        $.ajax(url, {
             success: function(response, status, test){
 
                 response = $.parseJSON(response);
@@ -355,6 +363,13 @@ function ViewModel(categories){
     // show favorites by default once google maps api is loaded
     deferred.done(function(){
         self.fav_click();
+    });
+
+
+    self.selected_option.subscribe(function(data){
+        self.selected_option(data);
+        self.page = 0;
+        self.yelp_ajax(self.current_category, self.page, self.selected_option());
     });
 };
 
