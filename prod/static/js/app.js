@@ -42,7 +42,7 @@ function Restaurant(name, price, category, rating, review_ct, img, coordinates, 
             'url': self.url,
             'id': self.id,
             'favorite': self.favorite()
-        }
+        };
     };
 }
 
@@ -165,7 +165,7 @@ function ViewModel(categories){
                                        {text: '$$', val: 2},
                                        {text: '$$$', val: 3},
                                        {text: '$$$$', val: 4}]);
-    self.selected_option = ko.observable(self.options()[0]['val']); // current selected filter option
+    self.selected_option = ko.observable(self.options()[0].val); // current selected filter option
 
     // load users favorite restaurants from local storage
     let add_fav = function(fav){
@@ -197,7 +197,7 @@ function ViewModel(categories){
 
     // set whether previous results are available
     self.set_prev_available = function(){
-        self.prev_available(self.page != 0);
+        self.prev_available(self.page !== 0);
     };
 
     // set whether more results are available
@@ -252,27 +252,27 @@ function ViewModel(categories){
                 response = $.parseJSON(response);
 
                 // if request fail, display error message instead
-                if(response['status'] != 200){
-                    self.error_msg('Error ' + response['status'] + ': ' + response['data']);
+                if(response.status != 200){
+                    self.error_msg('Error ' + response.status + ': ' + response.data);
                     self.selected_view('error');
                     return;
                 }
 
                 // store new restaurant results and display in navbar
-                data = $.parseJSON(response['data']);
-                self.total_current_restaurants = data['total'];
+                data = $.parseJSON(response.data);
+                self.total_current_restaurants = data.total;
                 self.set_next_available();
                 self.set_prev_available();
-                data['businesses'].forEach(function(curr){
-                    let restaurant = new Restaurant(curr['name'],
-                                                    curr['price'],
-                                                    curr['categories'][0]['title'],
-                                                    curr['rating'],
-                                                    curr['review_count'],
-                                                    curr['image_url'],
-                                                    curr['coordinates'],
-                                                    curr['url'],
-                                                    curr['id']);
+                data.businesses.forEach(function(curr){
+                    let restaurant = new Restaurant(curr.name,
+                                                    curr.price,
+                                                    curr.categories[0].title,
+                                                    curr.rating,
+                                                    curr.review_count,
+                                                    curr.image_url,
+                                                    curr.coordinates,
+                                                    curr.url,
+                                                    curr.id);
 
                     // if restaurant is in user favorites, use that restaurant object instead
                     let match = self.get_fav_by_id(restaurant.id);
@@ -322,8 +322,6 @@ function ViewModel(categories){
         });
 
         localStorage.setItem('favorites', JSON.stringify(store_favs));
-        console.log(JSON.parse(localStorage.getItem('favorites')));
-        console.log(localStorage.getItem('favorites'));
     };
 
     // restaurant navbar list item click handler
@@ -359,9 +357,8 @@ function ViewModel(categories){
 
     // favorite menu toggle icon
     self.fav_menu_icon = ko.pureComputed(function(){
-        return self.fav_shown() ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'
+        return self.fav_shown() ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x';
     }, self);
-
 
     // show favorites by default once google maps api is loaded
     deferred.done(function(){
@@ -385,21 +382,21 @@ $.ajax('/categories', {
         categories = {};
 
         cats.forEach(function(item){
-            if ($.inArray('food', item['parents']) != -1 ||
-                $.inArray('restaurants', item['parents']) != -1){
+            if ($.inArray('food', item.parents) != -1 ||
+                $.inArray('restaurants', item.parents) != -1){
 
                 let add = true
 
                 if ('country_whitelist' in item)
-                    if ($.inArray('US', item['country_whitelist']) == -1)
+                    if ($.inArray('US', item.country_whitelist) == -1)
                         add = false;
 
                 if ('country_blacklist' in item)
-                    if ($.inArray('US', item['country_blacklist']) != -1)
+                    if ($.inArray('US', item.country_blacklist) != -1)
                         add = false;
 
                 if (add)
-                    categories[item['title']] = item['alias'];
+                    categories[item.title] = item.alias;
             }
         });
 

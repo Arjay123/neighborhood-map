@@ -10,20 +10,20 @@ from flask import send_file
 app = Flask(__name__)
 
 # Retrieve yelp authorizations from yelp_auth json file
-YELP_CLIENT_ID = json.loads(open("yelp_auth.json", "r")
-    .read())["CLIENT_ID"]
-YELP_CLIENT_SECRET = json.loads(open("yelp_auth.json", "r")
-    .read())["CLIENT_SECRET"]
-YELP_API_KEY = json.loads(open("yelp_auth.json", "r")
-    .read())["API_KEY"]
+YELP_CLIENT_ID = json.loads(open('yelp_auth.json', 'r')
+    .read())['CLIENT_ID']
+YELP_CLIENT_SECRET = json.loads(open('yelp_auth.json', 'r')
+    .read())['CLIENT_SECRET']
+YELP_API_KEY = json.loads(open('yelp_auth.json', 'r')
+    .read())['API_KEY']
 
 
 """
 Homepage
 """
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 
 """
@@ -36,7 +36,7 @@ Params:
     category - category of restaurant type to retrieve
     offset - restaurant number offset
 """
-@app.route("/yelp")
+@app.route('/yelp')
 def yelp_api():
 
     category = request.args.get('category', None)
@@ -45,31 +45,31 @@ def yelp_api():
 
     if not category:
         return json.dumps({
-                "status": 404,
-                "data": "No category requested"
+                'status': 404,
+                'data': 'No category requested'
             })
 
-    endpoint = "https://api.yelp.com/v3/businesses/search"
-    query = "limit=10&location=San Jose&categories=%s&offset=%s" \
+    endpoint = 'https://api.yelp.com/v3/businesses/search'
+    query = 'limit=10&location=San Jose&categories=%s&offset=%s' \
             % (category, offset)
 
     if price:
-        query += "&price=%s" % price
+        query += '&price=%s' % price
 
-    r = requests.get(endpoint + "?" + query, 
+    r = requests.get(endpoint + '?' + query,
         headers={'Authorization': 'bearer %s' % YELP_API_KEY})
 
     response = {
-        "status": 200,
-        "data": r.text
+        'status': 200,
+        'data': r.text
     }
 
     if(r.status_code != 200):
         response = {
-            "status": r.status_code,
-            "data": "Could not retrieve restaurants from Yelp"
+            'status': r.status_code,
+            'data': 'Could not retrieve restaurants from Yelp'
         }
-    
+
     return json.dumps(response)
 
 
@@ -82,48 +82,48 @@ Retrieves more detailed information about a restaurant
 Params:
     business_id - id of restaurant to retrieve
 """
-@app.route("/yelp_business")
+@app.route('/yelp_business')
 def get_business():
-    business_id = request.args.get("id", None)
+    business_id = request.args.get('id', None)
 
     if not business_id:
         return json.dumps({
-                "status": 404,
-                "data": "No business id specified"
+                'status': 404,
+                'data': 'No business id specified'
             })
 
-    endpoint = "https://api.yelp.com/v3/businesses/"
+    endpoint = 'https://api.yelp.com/v3/businesses/'
     query = endpoint + business_id
 
     r = requests.get(query,
             headers={'Authorization': 'bearer %s' %YELP_API_KEY})
 
     response = {
-        "status": 200,
-        "data": r.text
+        'status': 200,
+        'data': r.text
     }
 
     if(r.status_code != 200):
         response = {
-            "status": r.status_code,
-            "data": "Could not retrieve restaurant info from yelp"
+            'status': r.status_code,
+            'data': 'Could not retrieve restaurant info from yelp'
         }
-    
+
     return json.dumps(response)
 
 
 """
 Local endpoint for retrieving stored category json file
 """
-@app.route("/categories")
+@app.route('/categories')
 def get_yelp_food_categories():
 
     # TODO - check if category json file exists first
 
-    return open("yelp_categories.json").read()
+    return open('yelp_categories.json').read()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(debug=True, host='0.0.0.0')

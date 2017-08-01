@@ -130,16 +130,16 @@ function create_window(restaurant){
             response = $.parseJSON(response);
 
             // show error window if request failed
-            if(response['status'] != 200){
-                show_error_window(restaurant.id, response['status'], response['data']);
+            if(response.status != 200){
+                show_error_window(restaurant.id, response.status, response.data);
                 return;
             }
 
-            data = $.parseJSON(response['data']);
+            data = $.parseJSON(response.data);
 
-            let address = data['location']['display_address'];
-            let phone = data['display_phone'];
-            let hours = data['hours'];
+            let address = data.location.display_address;
+            let phone = data.display_phone;
+            let hours = data.hours;
 
             show_window(restaurant, address, phone, hours);
 
@@ -173,9 +173,9 @@ function show_error_window(restaurant_id, status, error_msg){
 // day - day object
 //
 function create_hour_text(day){
-    return days[day['day']] + ': ' +
-               day['start'].slice(0, 2) + ':' + day['start'].slice(2, 4) + ' - ' +
-               day['end'].slice(0, 2) + ':' + day['end'].slice(2, 4);
+    return days[day.day] + ': ' +
+               day.start.slice(0, 2) + ':' + day.start.slice(2, 4) + ' - ' +
+               day.end.slice(0, 2) + ':' + day.end.slice(2, 4);
 }
 
 // set info window to display more detailed restaurant data
@@ -201,7 +201,7 @@ function show_window(restaurant, address, phone, hours){
 
     let hours_html = '<div class="flex-item"><table>';
 
-    hours[0]['open'].forEach(function(day){
+    hours[0].open.forEach(function(day){
         hours_html += '<tr><td>' + create_hour_text(day) + '</td></tr>'
     });
 
