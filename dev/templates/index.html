@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Jose Food Map</title>
 
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-    
+
     <div id="navbar" class="navbar">
         <div class="navbar-hdr flex-container">
             <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="text-center flex-item">San Jose Food Map</h3>
@@ -31,7 +31,7 @@
             </div>
             <div class="line-break"></div>
 
-            
+
 
             <!-- ko if: selected_view() == "restaurants" -->
             <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view, data: { list: restaurant_list, fav_list: false } }"></div>
@@ -84,7 +84,7 @@
         </div>
         <div class="flex-container">
             <div data-bind="visible: $root.prev_available, click: $root.get_prev_listings" class="flex-item flex-container ctrl-box pointer">
-                <i class="fa fa-arrow-left" aria-hidden="true" ></i><h4 class="flex-item text-center">Previous 10</h4>  
+                <i class="fa fa-arrow-left" aria-hidden="true" ></i><h4 class="flex-item text-center">Previous 10</h4>
             </div>
             <div data-bind="visible: $root.next_available, click: $root.get_next_listings" class="flex-item flex-container ctrl-box pointer">
                 <h4 class="flex-item text-center">Next 10</h4><i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -100,7 +100,7 @@
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
                         <div data-bind="template: { name: get_rating_template }"></div>
                         <p class="address"><span data-bind="text: price"></span> • <span data-bind="text: category"></span></p>
-                    </div>             
+                    </div>
                 </div>
                 <div class="restaurant-controls flex-container">
                     <div class="flex-item">
@@ -171,17 +171,14 @@
     <script type="text/html" id="rating_0">
         <img src="{{url_for('static', filename='img/small_0.png')}}">
     </script>
-    
+
 
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBC7k62ES7aKSRD9iXmiYnrEufL5XyS1p4&&libraries=places&callback=initMap"></script>
-    <!-- build:js -->
-    <script src="{{url_for('static', filename='js/keys.js')}}"></script>
     <script src="{{url_for('static', filename='js/app.js')}}"></script>
     <script src="{{url_for('static', filename='js/map.js')}}"></script>
-    <!-- endbuild -->
-    
+
 </body>
 </html>
