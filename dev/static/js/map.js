@@ -202,7 +202,7 @@ function show_window(restaurant, address, phone, hours){
     let hours_html = '<div class="flex-item"><table>';
 
     hours[0].open.forEach(function(day){
-        hours_html += '<tr><td>' + create_hour_text(day) + '</td></tr>'
+        hours_html += '<tr><td>' + create_hour_text(day) + '</td></tr>';
     });
 
     hours_html += '</table></div>';
@@ -224,7 +224,7 @@ function show_window(restaurant, address, phone, hours){
     marker.setIcon();
 
     // get nearest google streetview panorama to restaurant location and display in infowindow
-    let rest_location = new google.maps.LatLng(restaurant.coordinates.latitude, restaurant.coordinates.longitude)
+    let rest_location = new google.maps.LatLng(restaurant.coordinates.latitude, restaurant.coordinates.longitude);
     pano = new google.maps.StreetViewPanorama(document.getElementById('pano'));
 
     sv_service.getPanorama({location: rest_location,
@@ -279,7 +279,7 @@ function clear_markers(){
     for(let key in markers){
         if(markers.hasOwnProperty(key))
             markers[key].setMap(null);
-    };
+    }
     markers = {};
 }
 

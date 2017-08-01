@@ -385,7 +385,7 @@ $.ajax('/categories', {
             if ($.inArray('food', item.parents) != -1 ||
                 $.inArray('restaurants', item.parents) != -1){
 
-                let add = true
+                let add = true;
 
                 if ('country_whitelist' in item)
                     if ($.inArray('US', item.country_whitelist) == -1)
