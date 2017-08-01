@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Jose Food Map</title>
 
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
@@ -12,48 +12,169 @@
 </head>
 <body>
 
-    
+
     <div id="navbar" class="navbar">
         <div class="navbar-hdr flex-container">
-            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="title flex-item">Neighborhood Map</h3>
+            <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="text-center flex-item">San Jose Food Map</h3>
         </div>
         <div class="line-break"></div>
-        <div class="navbar-content">
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Favorites</a></h4>
+        <div class="navbar-content" id="navbar-scroll-div">
+            <div class="navbar-hdr flex-container pointer" data-bind="click: fav_click">
+                <i id="drop-icon" data-bind="css: fav_menu_icon" aria-hidden="true"></i><h3 class="flex-item text-center"> Favorites</h3>
+            </div>
+            <div id="favorites" class="navbar-template" data-bind="template: { name: 'restaurants', data: { list: favorites, fav_list: true } }">
+
             </div>
             <div class="line-break"></div>
-            <div class="navbar-menu-hdr">
-                <h4>Categories</h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
-            <div class="navbar-menu-item">
-                <h4><a class="navbar-link" href="#">Category 1</a></h4>
-            </div>
+
+
+
+            <!-- ko if: selected_view() == "restaurants" -->
+            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view, data: { list: restaurant_list, fav_list: false } }"></div>
+            <!-- /ko -->
+            <!-- ko ifnot: selected_view() == "restaurants" -->
+            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selected_view }"></div>
+            <!-- /ko -->
 
         </div>
     </div>
 
     <div class="content">
-        <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
+        <div class="toggle-hdr">
+            <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
+        </div>
+        <div id="map">
 
-
-
-
+        </div>
     </div>
+
+
+
+    <script type="text/html" id="error">
+        <div class="navbar-hdr flex-container">
+            <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.show_cat"></i>
+            <h5 class="flex-item text-center" data-bind="text: error_msg"></h5>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="categories">
+        <div class="text-center">
+            <h4>Categories</h4>
+        </div>
+        <div class="navbar-menu-items" data-bind="foreach: category_list">
+            <div class="navbar-menu-item">
+                <h4><span class="pointer" data-bind="text: $data, click: $parent.cat_clicked"></h4>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="restaurants">
+        <!-- ko ifnot: $data.fav_list -->
+        <div class="navbar-hdr flex-container">
+            <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.show_cat"></i>
+            <h4 class="flex-item text-center" data-bind="text: $root.current_category "></h4>
+            <select data-bind="options: $root.options, optionsText: 'text', optionsValue: 'val', value: $root.selected_option">
+            </select>
+        </div>
+        <div class="flex-container">
+            <div data-bind="visible: $root.prev_available, click: $root.get_prev_listings" class="flex-item flex-container ctrl-box pointer">
+                <i class="fa fa-arrow-left" aria-hidden="true" ></i><h4 class="flex-item text-center">Previous 10</h4>
+            </div>
+            <div data-bind="visible: $root.next_available, click: $root.get_next_listings" class="flex-item flex-container ctrl-box pointer">
+                <h4 class="flex-item text-center">Next 10</h4><i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </div>
+        </div>
+        <!-- /ko -->
+        <div class="navbar-menu-items" data-bind="foreach: list">
+            <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
+            <div class="navbar-menu-item restaurant-menu-item">
+                <div class="restaurant flex-container pointer" data-bind="click: $root.restaurant_clicked, event: { mouseenter: marker_bounce_on, mouseleave: marker_bounce_off } ">
+                    <img class="restaurant-img" data-bind="attr: { src: img }">
+                    <div class="restaurant-details" >
+                        <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
+                        <div data-bind="template: { name: get_rating_template }"></div>
+                        <p class="address"><span data-bind="text: price"></span> • <span data-bind="text: category"></span></p>
+                    </div>
+                </div>
+                <div class="restaurant-controls flex-container">
+                    <div class="flex-item">
+                        <span class="pointer" data-bind="click: $root.toggle_favorite">
+                            <!-- ko if: $parent.fav_list -->
+                            <i class="fa fa-ban fa-2x" aria-hidden="true"></i> Remove
+                            <!-- /ko -->
+                            <!-- ko ifnot: $parent.fav_list -->
+                            <i class="fa fa-heart" data-bind="css: {favorite: favorite() }" aria-hidden="true"></i> Favorite
+                            <!-- /ko -->
+                        </span>
+                    </div>
+                    <div class="flex-item">
+                        <a class="navbar-link" target="_blank" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+
+
+
+
+
+    <script type="text/html" id="rating_5">
+        <img src="{{url_for('static', filename='img/small_5.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_4.5">
+        <img src="{{url_for('static', filename='img/small_4_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_4">
+        <img src="{{url_for('static', filename='img/small_4.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_3.5">
+        <img src="{{url_for('static', filename='img/small_3_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_3">
+        <img src="{{url_for('static', filename='img/small_3.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_2.5">
+        <img src="{{url_for('static', filename='img/small_2_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_2">
+        <img src="{{url_for('static', filename='img/small_2.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_1.5">
+        <img src="{{url_for('static', filename='img/small_1_half.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_1">
+        <img src="{{url_for('static', filename='img/small_1.png')}}">
+    </script>
+
+    <script type="text/html" id="rating">
+        <img src="{{url_for('static', filename='img/small_1.png')}}">
+    </script>
+
+    <script type="text/html" id="rating_0">
+        <img src="{{url_for('static', filename='img/small_0.png')}}">
+    </script>
+
 
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{url_for('static', filename='js/app.min.js')}}"></script>
-    
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBC7k62ES7aKSRD9iXmiYnrEufL5XyS1p4&&libraries=places&callback=initMap"></script>
+    <script src="{{url_for('static', filename='js/app.js')}}"></script>
+    <script src="{{url_for('static', filename='js/map.js')}}"></script>
+
 </body>
 </html>
