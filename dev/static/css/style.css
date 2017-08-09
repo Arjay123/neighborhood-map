@@ -20,8 +20,8 @@ html {
     overflow: hidden;
 }
 
-#map { 
-    height: 100%; 
+#map {
+    height: 100%;
     /*width: 100%;*/
     position: relative;
 }
@@ -65,7 +65,7 @@ html {
 
 .navbar-content {
     position: relative;
-    overflow-y: scroll; 
+    overflow-y: scroll;
     height:100%
 }
 
@@ -187,7 +187,7 @@ html {
         width: 50%;
     }
 
-    
+
 }
 
 /* laptop */
