@@ -33,6 +33,10 @@ function initMap(){
     deferred.resolve();
 }
 
+function mapLoadError(){
+    console.log("map error");
+}
+
 // create markers on map for every restaurant in list
 //
 // restaurants - list of restaurant objects to create markers for
@@ -201,9 +205,14 @@ function showWindow(restaurant, address, phone, hours){
 
     let hoursHtml = '<div class="flex-item"><table>';
 
-    hours[0].open.forEach(function(day){
-        hoursHtml += '<tr><td>' + createHourText(day) + '</td></tr>';
-    });
+    if(hours == null) {
+        hoursHtml += '<tr><td> Unable to retrieve hours information from Yelp </td></tr>'
+    } else {
+        hours[0].open.forEach(function(day){
+            hoursHtml += '<tr><td>' + createHourText(day) + '</td></tr>';
+        });
+    }
+
 
     hoursHtml += '</table></div>';
 
