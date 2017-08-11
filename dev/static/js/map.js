@@ -147,6 +147,9 @@ function createWindow(restaurant){
 
             showWindow(restaurant, address, phone, hours);
 
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('Not able to retrieve restaurant information from Yelp API');
         }
     });
 
