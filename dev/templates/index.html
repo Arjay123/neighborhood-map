@@ -79,7 +79,7 @@
         <div class="navbar-hdr flex-container">
             <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.showCat"></i>
             <h4 class="flex-item text-center" data-bind="text: $root.currentCategory "></h4>
-            <select data-bind="options: $root.options, optionsText: 'text', optionsValue: 'val', value: $root.selectedOption">
+            <select data-bind="options: $root.options, value: $root.selectedOption">
             </select>
         </div>
         <div class="flex-container">
@@ -92,6 +92,7 @@
         </div>
         <!-- /ko -->
         <div class="navbar-menu-items" data-bind="foreach: list">
+            <!-- ko if: visible() || $parent.favList -->
             <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
             <div class="navbar-menu-item restaurant-menu-item">
                 <div class="restaurant flex-container pointer" data-bind="click: $root.restaurantClicked, event: { mouseenter: markerBounceOn, mouseleave: markerBounceOff } ">
@@ -116,9 +117,9 @@
                     <div class="flex-item">
                         <a class="navbar-link" target="_blank" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                     </div>
-
                 </div>
             </div>
+            <!-- /ko -->
         </div>
     </script>
 

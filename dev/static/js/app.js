@@ -23,6 +23,7 @@ function Restaurant(name, price, category, rating, reviewCt, img, coordinates, u
     this.url = url;
     this.id = id;
     this.favorite = ko.observable(favorite);
+    this.visible = ko.observable(true);
 
     // get ko template name of yelp's star rating imgs
     this.getRatingTemplate = function(){
@@ -82,11 +83,11 @@ function ViewModel(categories){
     self.nextAvailable = ko.observable(false); // whether there are restaurants after the current list to retrieve
     self.errorMsg = ko.observable(''); // error message in case of yelp api request failures
     self.categoryList = ko.observableArray(Object.keys(self.categories)); // list of categories
-    self.options = ko.observableArray([{text: 'Price Filter', val: 0}, // list of filter options
-                                       {text: '$', val: 1},
-                                       {text: '$$', val: 2},
-                                       {text: '$$$', val: 3},
-                                       {text: '$$$$', val: 4}]);
+    self.options = ko.observableArray(['Price Filter', // list of filter options
+                                       '$',
+                                       '$$',
+                                       '$$$',
+                                       '$$$$']);
     self.selectedOption = ko.observable(self.options()[0].val); // current selected filter option
 
 
@@ -147,15 +148,13 @@ function ViewModel(categories){
     };
 
     // retrieve restaurant results based on category and offset
-    self.yelpAjax = function(category, offset, price=0){
+    self.yelpAjax = function(category, offset){
 
         // clear current restaurant list
         self.restaurantList.removeAll();
         category = self.categories[category];
         let url = '/yelp?category=' + category + '&offset=' + offset;
 
-        if(price)
-            url += '&price=' + price;
 
         $.ajax(url, {
             success: function(response, status, test){
@@ -175,12 +174,13 @@ function ViewModel(categories){
                 self.setNextAvailable();
                 self.setPrevAvailable();
                 data.businesses.forEach(function(curr){
+
                     let restaurant = new Restaurant(curr.name,
                                                     curr.price,
                                                     curr.categories[0].title,
                                                     curr.rating,
                                                     curr.reviewCt,
-                                                    curr.imageUrl,
+                                                    curr.image_url,
                                                     curr.coordinates,
                                                     curr.url,
                                                     curr.id);
@@ -251,7 +251,6 @@ function ViewModel(categories){
         clearMarkers();
         if(self.favShown()){
             addMarkers(self.favorites());
-            console.log("waddupy");
         }
         else {
             addMarkers(self.restaurantList());
@@ -263,6 +262,7 @@ function ViewModel(categories){
         self.restaurantList.removeAll();
         clearMarkers();
         addMarkers(self.restaurantList());
+        self.selectedOption(self.options()[0]);
         self.selectedView('categories');
     };
 
@@ -313,9 +313,9 @@ function ViewModel(categories){
 
     // selected filter has been changed
     self.selectedOption.subscribe(function(data){
-        self.selectedOption(data);
-        self.page = 0;
-        self.yelpAjax(self.currentCategory, self.page, self.selectedOption());
+        self.restaurantList().forEach(function(restaurant){
+            restaurant.visible(restaurant.price === data || data === self.options()[0]);
+        });
     });
 }
 

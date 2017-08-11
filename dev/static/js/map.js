@@ -34,7 +34,7 @@ function initMap(){
 }
 
 function mapLoadError(){
-    console.log("map error");
+    alert("Error loading google maps API");
 }
 
 // create markers on map for every restaurant in list
@@ -42,7 +42,6 @@ function mapLoadError(){
 // restaurants - list of restaurant objects to create markers for
 //
 function addMarkers(restaurants){
-    console.log(restaurants);
     // if no restaurants passed, reset to default map view
     if(restaurants.length == 0){
         map.setOptions({
