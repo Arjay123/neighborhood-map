@@ -42,7 +42,7 @@ function mapLoadError(){
 // restaurants - list of restaurant objects to create markers for
 //
 function addMarkers(restaurants){
-
+    console.log(restaurants);
     // if no restaurants passed, reset to default map view
     if(restaurants.length == 0){
         map.setOptions({

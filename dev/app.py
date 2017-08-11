@@ -111,6 +111,9 @@ def get_business():
 
     return json.dumps(response)
 
+@app.route('/defaults')
+def get_default_favs():
+    return open('fav_defaults.json').read()
 
 """
 Local endpoint for retrieving stored category json file

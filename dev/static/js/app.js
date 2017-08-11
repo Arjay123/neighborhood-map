@@ -60,84 +60,6 @@ Restaurant.deserialize = function(obj){
                           obj.favorite);
 };
 
-
-const defaultFavs = [{
-    'name': 'La Costa',
-    'price': '$',
-    'category': 'Mexican',
-    'rating': 4,
-    'reviewCt': 734,
-    'img': 'https://s3-media1.fl.yelpcdn.com/bphoto/Y1D6LpW6JtkzhSBPEI3iCg/o.jpg',
-    'coordinates': {
-      'latitude': 37.35413,
-      'longitude': -121.85363
-    },
-    'url': 'https://www.yelp.com/biz/la-costa-san-jose-2?adjust_creative=kPuE2LrVTUv5F9…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'la-costa-san-jose-2',
-    'favorite': true
-  },
-  {
-    'name': 'i-Tea',
-    'price': '$',
-    'category': 'Bubble Tea',
-    'rating': 4.5,
-    'reviewCt': 242,
-    'img': 'https://s3-media2.fl.yelpcdn.com/bphoto/Nhc9VcNEILbO6uXjGquo7g/o.jpg',
-    'coordinates': {
-      'latitude': 37.312231523169,
-      'longitude': -121.809779829623
-    },
-    'url': 'https://www.yelp.com/biz/i-tea-san-jose?adjust_creative=kPuE2LrVTUv5F9bQgA6…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'i-tea-san-jose',
-    'favorite': true
-  },
-  {
-    'name': 'Rangoli India Restaurant',
-    'price': '$$',
-    'category': 'Indian',
-    'rating': 3.5,
-    'reviewCt': 1001,
-    'img': 'https://s3-media2.fl.yelpcdn.com/bphoto/CCvYbOFGvPdS4gtqOjty7g/o.jpg',
-    'coordinates': {
-      'latitude': 37.2605099,
-      'longitude': -121.93186
-    },
-    'url': 'https://www.yelp.com/biz/rangoli-india-restaurant-san-jose?adjust_creative=…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'rangoli-india-restaurant-san-jose',
-    'favorite': true
-  },
-  {
-    'name': 'Pho Y #1',
-    'price': '$',
-    'category': 'Vietnamese',
-    'rating': 4,
-    'reviewCt': 1058,
-    'img': 'https://s3-media1.fl.yelpcdn.com/bphoto/RgC-icTIQWN2l3qeCrjx-Q/o.jpg',
-    'coordinates': {
-      'latitude': 37.306181,
-      'longitude': -121.81068
-    },
-    'url': 'https://www.yelp.com/biz/pho-y-1-san-jose?adjust_creative=kPuE2LrVTUv5F9bQg…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'pho-y-1-san-jose',
-    'favorite': true
-  },
-  {
-    'name': 'Milohas',
-    'price': '$',
-    'category': 'Bakeries',
-    'rating': 4.5,
-    'reviewCt': 415,
-    'img': 'https://s3-media2.fl.yelpcdn.com/bphoto/8-pmaw3IAnxAuehCv4JL-g/o.jpg',
-    'coordinates': {
-      'latitude': 37.2556595,
-      'longitude': -121.8970034
-    },
-    'url': 'https://www.yelp.com/biz/milohas-san-jose?adjust_creative=kPuE2LrVTUv5F9bQg…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'milohas-san-jose',
-    'favorite': true
-  }
-];
-
 // ko viewmodel
 //
 // params:
@@ -167,18 +89,7 @@ function ViewModel(categories){
                                        {text: '$$$$', val: 4}]);
     self.selectedOption = ko.observable(self.options()[0].val); // current selected filter option
 
-    // load users favorite restaurants from local storage
-    let addFav = function(fav){
-        self.favorites.push(Restaurant.deserialize(fav));
-    };
 
-    let prevFavs = JSON.parse(localStorage.getItem('favorites'));
-    if(prevFavs)
-        prevFavs.forEach(addFav);
-    else
-        defaultFavs.forEach(addFav);
-
-    // if first time use, insert default favorites to showcase feature
 
 
     // toggle navbar visibility, only available for viewports of ipad or smaller
@@ -340,6 +251,7 @@ function ViewModel(categories){
         clearMarkers();
         if(self.favShown()){
             addMarkers(self.favorites());
+            console.log("waddupy");
         }
         else {
             addMarkers(self.restaurantList());
@@ -360,12 +272,46 @@ function ViewModel(categories){
         return self.favShown() ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x';
     }, self);
 
-    // show favorites by default once google maps api is loaded
+    // load users favorite restaurants from local storage
+    let addFav = function(fav){
+        self.favorites.push(Restaurant.deserialize(fav));
+    };
+
+    // load favorites from localstore or default json file
+    let loadFavs = function(){
+        let prevFavs = JSON.parse(localStorage.getItem('favorites'));
+        if(prevFavs){
+            prevFavs.forEach(addFav);
+            favs_deferred.resolve();
+        }
+        else {
+            // get default favorites from json file if first time user
+            $.ajax('/defaults', {
+                success: function(data, status){
+                    favs = $.parseJSON(data);
+                    favs.forEach(addFav);
+                },
+                error: function(data, status){
+                    alert('Could not retrieve default favorites');
+                },
+                complete: function(){
+                    favs_deferred.resolve();
+                }
+            });
+        }
+    }
+
+    // load favorites once google maps api is loaded
     deferred.done(function(){
+        loadFavs();
+    });
+
+    // show favorites by default once favorites and google maps api are loaded
+    favs_deferred.done(function(){
         self.favClick();
     });
 
-
+    // selected filter has been changed
     self.selectedOption.subscribe(function(data){
         self.selectedOption(data);
         self.page = 0;
@@ -373,7 +319,7 @@ function ViewModel(categories){
     });
 }
 
-
+let favs_deferred = $.Deferred();
 
 // at app start, retrieve list of available categories
 $.ajax('/categories', {
