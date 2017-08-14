@@ -3,29 +3,30 @@
 // name - name of restaurant
 // price - price of restaurant according to yelp's $ rating
 // category - type of restaurant
-// review_ct - number of reviews
+// reviewCt - number of reviews
 // img - url of restaurant image
 // coordinates - obj containing lat/lng of restaurant
 // url - yelp url for restaurant
 // id - restaurant id
 // favorite - bool value whether restaurant has been favorited by the user
 //
-function Restaurant(name, price, category, rating, review_ct, img, coordinates, url, id, favorite=false){
+function Restaurant(name, price, category, rating, reviewCt, img, coordinates, url, id, favorite=false){
     let self = this;
 
     this.name = name;
     this.price = price;
     this.category = category;
     this.rating = rating;
-    this.review_ct = review_ct;
+    this.reviewCt = reviewCt;
     this.img = img;
     this.coordinates = coordinates;
     this.url = url;
     this.id = id;
     this.favorite = ko.observable(favorite);
+    this.visible = ko.observable(true);
 
     // get ko template name of yelp's star rating imgs
-    this.get_rating_template = function(){
+    this.getRatingTemplate = function(){
         return 'rating_' + self.rating;
     };
 
@@ -36,7 +37,7 @@ function Restaurant(name, price, category, rating, review_ct, img, coordinates, 
             'price': self.price,
             'category': self.category,
             'rating': self.rating,
-            'review_ct': self.review_ct,
+            'reviewCt': self.reviewCt,
             'img': self.img,
             'coordinates': self.coordinates,
             'url': self.url,
@@ -52,91 +53,13 @@ Restaurant.deserialize = function(obj){
                           obj.price,
                           obj.category,
                           obj.rating,
-                          obj.review_ct,
+                          obj.reviewCt,
                           obj.img,
                           obj.coordinates,
                           obj.url,
                           obj.id,
                           obj.favorite);
 };
-
-
-const default_favs = [{
-    'name': 'La Costa',
-    'price': '$',
-    'category': 'Mexican',
-    'rating': 4,
-    'review_ct': 734,
-    'img': 'https://s3-media1.fl.yelpcdn.com/bphoto/Y1D6LpW6JtkzhSBPEI3iCg/o.jpg',
-    'coordinates': {
-      'latitude': 37.35413,
-      'longitude': -121.85363
-    },
-    'url': 'https://www.yelp.com/biz/la-costa-san-jose-2?adjust_creative=kPuE2LrVTUv5F9…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'la-costa-san-jose-2',
-    'favorite': true
-  },
-  {
-    'name': 'i-Tea',
-    'price': '$',
-    'category': 'Bubble Tea',
-    'rating': 4.5,
-    'review_ct': 242,
-    'img': 'https://s3-media2.fl.yelpcdn.com/bphoto/Nhc9VcNEILbO6uXjGquo7g/o.jpg',
-    'coordinates': {
-      'latitude': 37.312231523169,
-      'longitude': -121.809779829623
-    },
-    'url': 'https://www.yelp.com/biz/i-tea-san-jose?adjust_creative=kPuE2LrVTUv5F9bQgA6…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'i-tea-san-jose',
-    'favorite': true
-  },
-  {
-    'name': 'Rangoli India Restaurant',
-    'price': '$$',
-    'category': 'Indian',
-    'rating': 3.5,
-    'review_ct': 1001,
-    'img': 'https://s3-media2.fl.yelpcdn.com/bphoto/CCvYbOFGvPdS4gtqOjty7g/o.jpg',
-    'coordinates': {
-      'latitude': 37.2605099,
-      'longitude': -121.93186
-    },
-    'url': 'https://www.yelp.com/biz/rangoli-india-restaurant-san-jose?adjust_creative=…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'rangoli-india-restaurant-san-jose',
-    'favorite': true
-  },
-  {
-    'name': 'Pho Y #1',
-    'price': '$',
-    'category': 'Vietnamese',
-    'rating': 4,
-    'review_ct': 1058,
-    'img': 'https://s3-media1.fl.yelpcdn.com/bphoto/RgC-icTIQWN2l3qeCrjx-Q/o.jpg',
-    'coordinates': {
-      'latitude': 37.306181,
-      'longitude': -121.81068
-    },
-    'url': 'https://www.yelp.com/biz/pho-y-1-san-jose?adjust_creative=kPuE2LrVTUv5F9bQg…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'pho-y-1-san-jose',
-    'favorite': true
-  },
-  {
-    'name': 'Milohas',
-    'price': '$',
-    'category': 'Bakeries',
-    'rating': 4.5,
-    'review_ct': 415,
-    'img': 'https://s3-media2.fl.yelpcdn.com/bphoto/8-pmaw3IAnxAuehCv4JL-g/o.jpg',
-    'coordinates': {
-      'latitude': 37.2556595,
-      'longitude': -121.8970034
-    },
-    'url': 'https://www.yelp.com/biz/milohas-san-jose?adjust_creative=kPuE2LrVTUv5F9bQg…api_v3&utm_medium=api_v3_business_search&utm_source=kPuE2LrVTUv5F9bQgA6JkA',
-    'id': 'milohas-san-jose',
-    'favorite': true
-  }
-];
 
 // ko viewmodel
 //
@@ -148,103 +71,89 @@ function ViewModel(categories){
     let self = this;
 
     self.categories = categories; // list of categories
-    self.restaurant_list = ko.observableArray(); // current list of restaurants to be displayed in navbar list
+    self.restaurantList = ko.observableArray(); // current list of restaurants to be displayed in navbar list
     self.favorites = ko.observableArray(); // list of user's favorite restaurants
-    self.selected_view = ko.observable('categories'); // current selected view template
-    self.fav_shown = ko.observable(false); // whether the user has selected to display their favorite restaurants over search results
-    self.page = 0; // page number of results, used w/ list_per_page to create an offset for getting other results
-    self.list_per_page = 10; // num of restaurant results to get per request
-    self.current_category = null; // currently selected restaurant type
-    self.total_current_restaurants = 0; // total restaurants of current selected category
-    self.prev_available = ko.observable(false); // whether there are restaurants before the current list to retrieve
-    self.next_available = ko.observable(false); // whether there are restaurants after the current list to retrieve
-    self.error_msg = ko.observable(''); // error message in case of yelp api request failures
-    self.category_list = ko.observableArray(Object.keys(self.categories)); // list of categories
-    self.options = ko.observableArray([{text: 'Price Filter', val: 0}, // list of filter options
-                                       {text: '$', val: 1},
-                                       {text: '$$', val: 2},
-                                       {text: '$$$', val: 3},
-                                       {text: '$$$$', val: 4}]);
-    self.selected_option = ko.observable(self.options()[0].val); // current selected filter option
+    self.selectedView = ko.observable('categories'); // current selected view template
+    self.favShown = ko.observable(false); // whether the user has selected to display their favorite restaurants over search results
+    self.page = 0; // page number of results, used w/ listPerPage to create an offset for getting other results
+    self.listPerPage = 10; // num of restaurant results to get per request
+    self.currentCategory = null; // currently selected restaurant type
+    self.totalCurrentRestaurants = 0; // total restaurants of current selected category
+    self.prevAvailable = ko.observable(false); // whether there are restaurants before the current list to retrieve
+    self.nextAvailable = ko.observable(false); // whether there are restaurants after the current list to retrieve
+    self.errorMsg = ko.observable(''); // error message in case of yelp api request failures
+    self.categoryList = ko.observableArray(Object.keys(self.categories)); // list of categories
+    self.options = ko.observableArray(['Price Filter', // list of filter options
+                                       '$',
+                                       '$$',
+                                       '$$$',
+                                       '$$$$']);
+    self.selectedOption = ko.observable(self.options()[0].val); // current selected filter option
 
-    // load users favorite restaurants from local storage
-    let add_fav = function(fav){
-        self.favorites.push(Restaurant.deserialize(fav));
-    };
 
-    let prev_favs = JSON.parse(localStorage.getItem('favorites'));
-    if(prev_favs)
-        prev_favs.forEach(add_fav);
-    else
-        default_favs.forEach(add_fav);
-
-    // if first time use, insert default favorites to showcase feature
 
 
     // toggle navbar visibility, only available for viewports of ipad or smaller
     self.toggleNavbar = function(){
-        $('#navbar').toggle('slide', 300, resize_map);
+        $('#navbar').toggle('slide', 300, resizeMap);
     };
 
-    // check if restaurant one of user's favorites
-    self.get_fav_by_id = function(id){
+    // check if restaurant in list
+    self.getRestByID = function(id, list){
 
-        return ko.utils.arrayFirst(self.favorites(), function(item){
+        return ko.utils.arrayFirst(list, function(item){
             return id.valueOf() === item.id.valueOf();
         });
 
     };
 
     // set whether previous results are available
-    self.set_prev_available = function(){
-        self.prev_available(self.page !== 0);
+    self.setPrevAvailable = function(){
+        self.prevAvailable(self.page !== 0);
     };
 
     // set whether more results are available
-    self.set_next_available = function(){
-        self.next_available((self.page * self.list_per_page) < self.total_current_restaurants);
+    self.setNextAvailable = function(){
+        self.nextAvailable((self.page * self.listPerPage) < self.totalCurrentRestaurants);
     };
 
     // get next listings from yelp api
-    self.get_next_listings = function(){
+    self.getNextListings = function(){
 
-        let offset = ++self.page * self.list_per_page;
-        self.yelp_ajax(self.current_category, offset);
-        self.yelp_ajax(self.current_category, offset, self.selected_option());
+        let offset = ++self.page * self.listPerPage;
+        self.yelpAjax(self.currentCategory, offset);
 
     };
 
     // get previous lists from yelp api
-    self.get_prev_listings = function(){
+    self.getPrevListings = function(){
 
-        let offset = --self.page * self.list_per_page;
-        self.yelp_ajax(self.current_category, offset, self.selected_option());
+        let offset = --self.page * self.listPerPage;
+        self.yelpAjax(self.currentCategory, offset);
 
     };
 
     // category clicked event handler, call yelp api service to retrieve restaurants
-    self.cat_clicked = function(element){
+    self.catClicked = function(element){
 
-        if(self.fav_shown()){
-            self.fav_click();
+        if(self.favShown()){
+            self.favClick();
         }
 
         self.page = 0;
-        self.current_category = element;
-        self.yelp_ajax(self.current_category, 0, self.selected_option());
+        self.currentCategory = element;
+        self.yelpAjax(self.currentCategory, 0, self.selectedOption());
 
     };
 
     // retrieve restaurant results based on category and offset
-    self.yelp_ajax = function(category, offset, price=0){
+    self.yelpAjax = function(category, offset){
 
         // clear current restaurant list
-        self.restaurant_list.removeAll();
+        self.restaurantList.removeAll();
         category = self.categories[category];
         let url = '/yelp?category=' + category + '&offset=' + offset;
 
-        if(price)
-            url += '&price=' + price;
 
         $.ajax(url, {
             success: function(response, status, test){
@@ -253,17 +162,18 @@ function ViewModel(categories){
 
                 // if request fail, display error message instead
                 if(response.status != 200){
-                    self.error_msg('Error ' + response.status + ': ' + response.data);
-                    self.selected_view('error');
+                    self.errorMsg('Error ' + response.status + ': ' + response.data);
+                    self.selectedView('error');
                     return;
                 }
 
                 // store new restaurant results and display in navbar
                 data = $.parseJSON(response.data);
-                self.total_current_restaurants = data.total;
-                self.set_next_available();
-                self.set_prev_available();
+                self.totalCurrentRestaurants = data.total;
+                self.setNextAvailable();
+                self.setPrevAvailable();
                 data.businesses.forEach(function(curr){
+
                     let restaurant = new Restaurant(curr.name,
                                                     curr.price,
                                                     curr.categories[0].title,
@@ -274,22 +184,16 @@ function ViewModel(categories){
                                                     curr.url,
                                                     curr.id);
 
-                    // if restaurant is in user favorites, use that restaurant object instead
-                    let match = self.get_fav_by_id(restaurant.id);
-                    if (!match){
-                        self.restaurant_list.push(restaurant);
-                    }
-                    else {
-                        self.restaurant_list.push(match);
-                    }
+                    restaurant.favorite(self.getRestByID(restaurant.id, self.favorites()));
+                    self.restaurantList.push(restaurant);
+
                 });
 
                 // display markers for restaurant in google map
-                clear_markers();
-                add_markers(self.restaurant_list());
+                self.set_visible(self.selectedOption());
 
                 // set navbar template to restaurant list
-                self.selected_view('restaurants');
+                self.selectedView('restaurants');
 
                 // auto scroll to top of navbar
                 $('#navbar-scroll-div').scrollTop(0);
@@ -304,76 +208,157 @@ function ViewModel(categories){
     };
 
     // toggle restaurant favorite setting
-    self.toggle_favorite = function(obj){
+    self.toggleFavorite = function(obj){
 
-        let match =self.get_fav_by_id(obj.id);
+        // add/remove in favorites list
+        let match = self.getRestByID(obj.id, self.favorites());
         if(!match){
-            self.favorites.push(obj);
+            self.favorites.push(new Restaurant(obj.name,
+                                                obj.price,
+                                                obj.category,
+                                                obj.rating,
+                                                obj.reviewCt,
+                                                obj.img,
+                                                obj.coordinates,
+                                                obj.url,
+                                                obj.id,
+                                                true));
         }
         else{
             self.favorites.remove(match);
         }
 
-        obj.favorite(!obj.favorite());
+        // toggle favorite if restaurant is in current restaurant list
+        match = self.getRestByID(obj.id, self.restaurantList());
+        if(match){
+            match.favorite(!match.favorite());
+        }
 
-        let store_favs = [];
+        if(self.favShown()){
+            clearMarkers();
+            addMarkers(self.favorites());
+        }
+
+        // store favs in local storage
+        let storeFavs = [];
         ko.utils.arrayForEach(self.favorites(), function(item){
-            store_favs.push(item.serialize());
+            storeFavs.push(item.serialize());
         });
 
-        localStorage.setItem('favorites', JSON.stringify(store_favs));
+        localStorage.setItem('favorites', JSON.stringify(storeFavs));
     };
 
     // restaurant navbar list item click handler
-    self.restaurant_clicked = function(element){
-        show_restaurant_window(element);
+    self.restaurantClicked = function(element){
+        showRestaurantWindow(element);
     };
 
     // favorites tab toggle button click handler
-    self.fav_click = function(element){
+    self.favClick = function(element){
 
         // toggle favorite shown value
-        self.fav_shown(!self.fav_shown());
+        self.favShown(!self.favShown());
         $('#favorites').slideToggle();
 
         // reset map markers and show favorite markers if favorite list is visible
-        clear_markers();
-        if(self.fav_shown()){
-            add_markers(self.favorites());
+        clearMarkers();
+        if(self.favShown()){
+            addMarkers(self.favorites());
         }
         else {
-            add_markers(self.restaurant_list());
+            addMarkers(self.restaurantList());
         }
     };
 
     // show categories
-    self.show_cat = function(){
-        self.restaurant_list.removeAll();
-        clear_markers();
-        add_markers(self.restaurant_list());
-        self.selected_view('categories');
+    self.showCat = function(){
+        self.restaurantList.removeAll();
+        clearMarkers();
+        addMarkers(self.restaurantList());
+        self.selectedOption(self.options()[0]);
+        self.selectedView('categories');
     };
 
 
     // favorite menu toggle icon
-    self.fav_menu_icon = ko.pureComputed(function(){
-        return self.fav_shown() ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x';
+    self.favMenuIcon = ko.pureComputed(function(){
+        return self.favShown() ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x';
     }, self);
 
-    // show favorites by default once google maps api is loaded
+    // load users favorite restaurants from local storage
+    let addFav = function(fav){
+        self.favorites.push(Restaurant.deserialize(fav));
+    };
+
+    // load favorites from localstore or default json file
+    let loadFavs = function(){
+        let prevFavs = JSON.parse(localStorage.getItem('favorites'));
+        if(prevFavs){
+            prevFavs.forEach(addFav);
+            favs_deferred.resolve();
+        }
+        else {
+            // get default favorites from json file if first time user
+            $.ajax('/defaults', {
+                success: function(data, status){
+                    favs = $.parseJSON(data);
+                    favs.forEach(addFav);
+                },
+                error: function(data, status){
+                    alert('Could not retrieve default favorites');
+                },
+                complete: function(){
+                    // signal favorites done loading
+                    favs_deferred.resolve();
+                }
+            });
+        }
+    }
+
+    // load favorites once google maps api is loaded
     deferred.done(function(){
-        self.fav_click();
+        loadFavs();
     });
 
+    // show favorites by default once favorites and google maps api are loaded
+    favs_deferred.done(function(){
+        self.favClick();
+    });
 
-    self.selected_option.subscribe(function(data){
-        self.selected_option(data);
-        self.page = 0;
-        self.yelp_ajax(self.current_category, self.page, self.selected_option());
+    // selected filter has been changed
+    self.selectedOption.subscribe(function(data){
+        self.set_visible(data);
+    });
+
+    // set restaurants as visible based on current price filter
+    self.set_visible = function(option){
+        self.restaurantList().forEach(function(restaurant){
+            restaurant.visible(restaurant.price === option || option === self.options()[0]);
+        });
+        clearMarkers();
+        addMarkers(self.restaurantList());
+    }
+
+    // get count of visible restaurants
+    self.visible_any = ko.computed(function(){
+
+        // prevent error msg from appearing while loading restaurants
+        if(self.restaurantList().length == 0)
+            return true;
+
+        let visible = false;
+        self.restaurantList().forEach(function(restaurant){
+            if(restaurant.visible()){
+                visible = true;
+                return;
+            }
+        });
+        return visible;
     });
 }
 
-
+// used to signal favorites list shown once favorites are loaded on app start
+let favs_deferred = $.Deferred();
 
 // at app start, retrieve list of available categories
 $.ajax('/categories', {

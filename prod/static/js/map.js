@@ -11,9 +11,9 @@ const days = {
 }; // days of the week
 
 let map; // google maps map object
-let info_window; // info window, only one will be displayed at any time
-let active_marker; // id of currently active marker
-let sv_service; // google streetview service object
+let infoWindow; // info window, only one will be displayed at any time
+let activeMarker; // id of currently active marker
+let svService; // google streetview service object
 let pano; // google streetview panorama container
 let markers = {}; // dictionary of all currently visible markers
 let bounds; // google maps bounds object
@@ -27,75 +27,86 @@ function initMap(){
         zoom: DEFAULT_ZOOM,
         center: SANJOSE_COORD,
     });
-    info_window = new google.maps.InfoWindow();
-    sv_service = new google.maps.StreetViewService();
+    infoWindow = new google.maps.InfoWindow();
+    svService = new google.maps.StreetViewService();
 
     deferred.resolve();
+}
+
+function mapLoadError(){
+    alert("Error loading google maps API");
 }
 
 // create markers on map for every restaurant in list
 //
 // restaurants - list of restaurant objects to create markers for
 //
-function add_markers(restaurants){
+function addMarkers(restaurants){
 
-    // if no restaurants passed, reset to default map view
-    if(restaurants.length == 0){
-        map.setOptions({
-            zoom: DEFAULT_ZOOM,
-            center: SANJOSE_COORD,
-        });
-        return;
-    }
+    let show_default = restaurants.length == 0;
 
     // reset map bounds
     bounds = new google.maps.LatLngBounds();
 
     restaurants.forEach(function(restaurant){
 
-        let new_marker = new google.maps.Marker({
-            position: {lat: restaurant.coordinates.latitude, lng: restaurant.coordinates.longitude },
-            map: map,
-            animation: google.maps.Animation.DROP
-        });
+        show_default = show_default || restaurant.visible;
+        if(restaurant.visible()){
+            let newMarkers = new google.maps.Marker({
+                position: {lat: restaurant.coordinates.latitude, lng: restaurant.coordinates.longitude },
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
 
 
-        new_marker.addListener('click', function(){
-            show_restaurant_window(restaurant);
-        });
+            newMarkers.addListener('click', function(){
+                showRestaurantWindow(restaurant);
+            });
 
-        new_marker.addListener('mouseover', function(){
-            new_marker.setAnimation(google.maps.Animation.BOUNCE);
-        });
+            newMarkers.addListener('mouseover', function(){
+                newMarkers.setAnimation(google.maps.Animation.BOUNCE);
+            });
 
-        new_marker.addListener('mouseout', function(){
-            new_marker.setAnimation(null);
-        });
+            newMarkers.addListener('mouseout', function(){
+                newMarkers.setAnimation(null);
+            });
 
-        // add new marker to list of markers
-        markers[restaurant.id] = new_marker;
+            // add new marker to list of markers
+            markers[restaurant.id] = newMarkers;
 
-        // extend map bounds to include new marker
-        bounds.extend(new_marker.position);
+            // extend map bounds to include new marker
+            bounds.extend(newMarkers.position);
+        }
     });
 
-    map.fitBounds(bounds);
+    // if no restaurants, reset to default map view
+    if(show_default){
+        map.setOptions({
+            zoom: DEFAULT_ZOOM,
+            center: SANJOSE_COORD,
+        });
+        return;
+    }
+    else {
+        map.fitBounds(bounds);
+    }
+
 }
 
 // change which marker is currently active
 //
 // id - id of new active marker
 //
-function change_active_marker(id){
-    reset_active_marker();
-    active_marker = id;
+function changeActiveMarker(id){
+    resetActiveMarker();
+    activeMarker = id;
 }
 
 // reset active marker icon to default 'non-active' marker
 //
-function reset_active_marker(){
-    if(active_marker in markers){
-        let marker = markers[active_marker];
+function resetActiveMarker(){
+    if(activeMarker in markers){
+        let marker = markers[activeMarker];
         marker.setIcon();
     }
 
@@ -105,23 +116,23 @@ function reset_active_marker(){
 //
 // restaurant - restaurant object to display detailed info
 //
-function show_restaurant_window(restaurant){
+function showRestaurantWindow(restaurant){
 
     if(!(restaurant.id in markers)){
         console.log('can\'t show window, marker not present');
         return;
     }
 
-    change_active_marker(restaurant.id);
-    create_window(restaurant);
-    change_color(restaurant.id);
+    changeActiveMarker(restaurant.id);
+    createWindow(restaurant);
+    changeColor(restaurant.id);
 }
 
 // create more detailed restaurant info window using yelp data
 //
 // restaurant - restaurant object
 //
-function create_window(restaurant){
+function createWindow(restaurant){
 
     // request more detailed restaurant data using yelp business api endpoint
     // TODO - add error/fail handler function
@@ -131,7 +142,7 @@ function create_window(restaurant){
 
             // show error window if request failed
             if(response.status != 200){
-                show_error_window(restaurant.id, response.status, response.data);
+                showErrorWindow(restaurant.id, response.status, response.data);
                 return;
             }
 
@@ -141,8 +152,11 @@ function create_window(restaurant){
             let phone = data.display_phone;
             let hours = data.hours;
 
-            show_window(restaurant, address, phone, hours);
+            showWindow(restaurant, address, phone, hours);
 
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('Not able to retrieve restaurant information from Yelp API');
         }
     });
 
@@ -150,20 +164,20 @@ function create_window(restaurant){
 
 // set info window to display an error
 //
-// restaurant_id - id of marker to display info window at
+// restaurantID - id of marker to display info window at
 // status - status code of error
-// error_msg - error message
+// errorMsg - error message
 //
-function show_error_window(restaurant_id, status, error_msg){
+function showErrorWindow(restaurantID, status, errorMsg){
 
-    let marker = markers[restaurant_id];
+    let marker = markers[restaurantID];
 
     let content = $('<div id="info_window">' +
-                                '<p>Error ' + status + ': ' + error_msg + '</p>' +
+                                '<p>Error ' + status + ': ' + errorMsg + '</p>' +
                             '</div>');
-    info_window.close();
-    info_window.setContent(content[0]);
-    info_window.open(map, marker);
+    infoWindow.close();
+    infoWindow.setContent(content[0]);
+    infoWindow.open(map, marker);
 }
 
 
@@ -172,7 +186,7 @@ function show_error_window(restaurant_id, status, error_msg){
 //
 // day - day object
 //
-function create_hour_text(day){
+function createHourText(day){
     return days[day.day] + ': ' +
                day.start.slice(0, 2) + ':' + day.start.slice(2, 4) + ' - ' +
                day.end.slice(0, 2) + ':' + day.end.slice(2, 4);
@@ -185,59 +199,64 @@ function create_hour_text(day){
 // phone - phone number of restaurant
 // hours - hours of operation for restaurant
 //
-function show_window(restaurant, address, phone, hours){
+function showWindow(restaurant, address, phone, hours){
 
     let marker = markers[restaurant.id];
 
-    let details_html = '<div class="flex-item"><table>';
+    let detailsHtml = '<div class="flex-item"><table>';
 
     address.forEach(function(line){
-        details_html += '<tr><td>' + line + '</td></tr>';
+        detailsHtml += '<tr><td>' + line + '</td></tr>';
     });
 
-    details_html += '<tr><td>' + phone + '</td></tr>';
-    details_html += '<tr><td><a href="' + restaurant.url + '">View on Yelp</a></td></tr>';
-    details_html += '</table></div>';
+    detailsHtml += '<tr><td>' + phone + '</td></tr>';
+    detailsHtml += '<tr><td><a href="' + restaurant.url + '">View on Yelp</a></td></tr>';
+    detailsHtml += '</table></div>';
 
-    let hours_html = '<div class="flex-item"><table>';
+    let hoursHtml = '<div class="flex-item"><table>';
 
-    hours[0].open.forEach(function(day){
-        hours_html += '<tr><td>' + create_hour_text(day) + '</td></tr>';
-    });
+    if(hours == null) {
+        hoursHtml += '<tr><td> Unable to retrieve hours information from Yelp </td></tr>'
+    } else {
+        hours[0].open.forEach(function(day){
+            hoursHtml += '<tr><td>' + createHourText(day) + '</td></tr>';
+        });
+    }
 
-    hours_html += '</table></div>';
 
-    let content = $('<div id="info_window">' +
+    hoursHtml += '</table></div>';
+
+    let content = $('<div id="infoindow">' +
                       '<div class="info-window-hdr">' +
                           '<h3>' + restaurant.name + '</h3>' +
                       '</div>' +
                       '<div class="flex-container restaurant-details">' +
-                          details_html + hours_html +
+                          detailsHtml + hoursHtml +
                       '</div>' +
                       '<div id="pano">' +
                       '</div>' +
                     '</div>');
 
-    info_window.close();
-    info_window.setContent(content[0]);
-    info_window.open(map, marker);
+    infoWindow.close();
+    infoWindow.setContent(content[0]);
+    infoWindow.open(map, marker);
     marker.setIcon();
 
     // get nearest google streetview panorama to restaurant location and display in infowindow
-    let rest_location = new google.maps.LatLng(restaurant.coordinates.latitude, restaurant.coordinates.longitude);
+    let restLocation = new google.maps.LatLng(restaurant.coordinates.latitude, restaurant.coordinates.longitude);
     pano = new google.maps.StreetViewPanorama(document.getElementById('pano'));
 
-    sv_service.getPanorama({location: rest_location,
+    svService.getPanorama({location: restLocation,
                             radius: 50},
                             function(data, status){
                                 if(status === 'OK'){
 
-                                    let sv_heading = google.maps.geometry.spherical.computeHeading(
+                                    let svHeading = google.maps.geometry.spherical.computeHeading(
                                         data.location.latLng,
-                                        rest_location);
+                                        restLocation);
 
                                     pano.setPano(data.location.pano);
-                                    pano.setPov({heading: sv_heading, pitch:0});
+                                    pano.setPov({heading: svHeading, pitch:0});
                                     pano.setVisible(true);
 
                                 } else {
@@ -251,31 +270,31 @@ function show_window(restaurant, address, phone, hours){
 
 // change color of marker to yellow
 //
-// restaurant_id - id of marker to change color
+// restaurantID - id of marker to change color
 //
-function change_color(restaurant_id){
-    let marker = markers[restaurant_id];
+function changeColor(restaurantID){
+    let marker = markers[restaurantID];
     marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
 }
 
 // resize map to fit its current container
 //
-function resize_map(){
+function resizeMap(){
 
     google.maps.event.trigger(map, 'resize');
     if(bounds)
         map.fitBounds(bounds);
 
-    if(info_window.getMap() !== null && typeof info_window.getMap() !== 'undefined'){
-        info_window.close();
-        info_window.open(map, markers[active_marker]);
+    if(infoWindow.getMap() !== null && typeof infoWindow.getMap() !== 'undefined'){
+        infoWindow.close();
+        infoWindow.open(map, markers[activeMarker]);
     }
 
 }
 
 // clear all currently visible map markers
 //
-function clear_markers(){
+function clearMarkers(){
     for(let key in markers){
         if(markers.hasOwnProperty(key))
             markers[key].setMap(null);
@@ -287,7 +306,7 @@ function clear_markers(){
 //
 // restaurant - restaurant to turn off marker animation
 //
-function marker_bounce_off(restaurant){
+function markerBounceOff(restaurant){
     if(!(restaurant.id in markers)){
         console.log('can\'t change animation, marker not present');
         return;
@@ -302,7 +321,7 @@ function marker_bounce_off(restaurant){
 //
 // restaurant - restaurant to turn on marker animation
 //
-function marker_bounce_on(restaurant){
+function markerBounceOn(restaurant){
     if(!(restaurant.id in markers)){
         console.log('can\'t change animation, marker not present');
         return;
