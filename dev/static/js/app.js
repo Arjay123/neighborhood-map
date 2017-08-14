@@ -234,6 +234,9 @@ function ViewModel(categories){
             match.favorite(!match.favorite());
         }
 
+        clearMarkers();
+        addMarkers(self.favorites());
+
         // store favs in local storage
         let storeFavs = [];
         ko.utils.arrayForEach(self.favorites(), function(item){
