@@ -210,6 +210,7 @@ function ViewModel(categories){
     // toggle restaurant favorite setting
     self.toggleFavorite = function(obj){
 
+        // add/remove in favorites list
         let match = self.getRestByID(obj.id, self.favorites());
         if(!match){
             self.favorites.push(new Restaurant(obj.name,
@@ -227,11 +228,13 @@ function ViewModel(categories){
             self.favorites.remove(match);
         }
 
+        // toggle favorite if restaurant is in current restaurant list
         match = self.getRestByID(obj.id, self.restaurantList());
         if(match){
             match.favorite(!match.favorite());
         }
 
+        // store favs in local storage
         let storeFavs = [];
         ko.utils.arrayForEach(self.favorites(), function(item){
             storeFavs.push(item.serialize());

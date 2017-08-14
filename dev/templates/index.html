@@ -99,7 +99,11 @@
                     <img class="restaurant-img" data-bind="attr: { src: img }">
                     <div class="restaurant-details" >
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
-                        <div data-bind="template: { name: getRatingTemplate }"></div>
+                        <div class="restaurant-reviews">
+                            <div data-bind="template: { name: getRatingTemplate }"></div>
+                            <span data-bind="text: reviewCt"></span>
+                            <span> Reviews</span>
+                        </div>
                         <p class="address"><span data-bind="text: price"></span> • <span data-bind="text: category"></span></p>
                     </div>
                 </div>
