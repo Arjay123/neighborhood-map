@@ -313,7 +313,7 @@ function ViewModel(categories){
                 }
             });
         }
-    }
+    };
 
     // load favorites once google maps api is loaded
     deferred.done(function(){
@@ -337,7 +337,7 @@ function ViewModel(categories){
         });
         clearMarkers();
         addMarkers(self.restaurantList());
-    }
+    };
 
     // get count of visible restaurants
     self.visible_any = ko.computed(function(){

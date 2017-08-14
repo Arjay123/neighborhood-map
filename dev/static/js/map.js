@@ -216,7 +216,7 @@ function showWindow(restaurant, address, phone, hours){
     let hoursHtml = '<div class="flex-item"><table>';
 
     if(hours == null) {
-        hoursHtml += '<tr><td> Unable to retrieve hours information from Yelp </td></tr>'
+        hoursHtml += '<tr><td> Unable to retrieve hours information from Yelp </td></tr>';
     } else {
         hours[0].open.forEach(function(day){
             hoursHtml += '<tr><td>' + createHourText(day) + '</td></tr>';
