@@ -98,10 +98,10 @@ function ViewModel(categories){
         $('#navbar').toggle('slide', 300, resizeMap);
     };
 
-    // check if restaurant one of user's favorites
-    self.getFavByID = function(id){
+    // check if restaurant in list
+    self.getRestByID = function(id, list){
 
-        return ko.utils.arrayFirst(self.favorites(), function(item){
+        return ko.utils.arrayFirst(list, function(item){
             return id.valueOf() === item.id.valueOf();
         });
 
@@ -178,20 +178,15 @@ function ViewModel(categories){
                                                     curr.price,
                                                     curr.categories[0].title,
                                                     curr.rating,
-                                                    curr.reviewCt,
+                                                    curr.review_count,
                                                     curr.image_url,
                                                     curr.coordinates,
                                                     curr.url,
                                                     curr.id);
 
-                    // if restaurant is in user favorites, use that restaurant object instead
-                    let match = self.getFavByID(restaurant.id);
-                    if (!match){
-                        self.restaurantList.push(restaurant);
-                    }
-                    else {
-                        self.restaurantList.push(match);
-                    }
+                    restaurant.favorite(self.getRestByID(restaurant.id, self.favorites()));
+                    self.restaurantList.push(restaurant);
+
                 });
 
                 // display markers for restaurant in google map
@@ -215,15 +210,27 @@ function ViewModel(categories){
     // toggle restaurant favorite setting
     self.toggleFavorite = function(obj){
 
-        let match =self.getFavByID(obj.id);
+        let match = self.getRestByID(obj.id, self.favorites());
         if(!match){
-            self.favorites.push(obj);
+            self.favorites.push(new Restaurant(obj.name,
+                                                obj.price,
+                                                obj.category,
+                                                obj.rating,
+                                                obj.reviewCt,
+                                                obj.img,
+                                                obj.coordinates,
+                                                obj.url,
+                                                obj.id,
+                                                true));
         }
         else{
             self.favorites.remove(match);
         }
 
-        obj.favorite(!obj.favorite());
+        match = self.getRestByID(obj.id, self.restaurantList());
+        if(match){
+            match.favorite(!match.favorite());
+        }
 
         let storeFavs = [];
         ko.utils.arrayForEach(self.favorites(), function(item){
