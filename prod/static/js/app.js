@@ -343,7 +343,7 @@ function ViewModel(categories){
     self.visible_any = ko.computed(function(){
 
         // prevent error msg from appearing while loading restaurants
-        if(self.restaurantList().length == 0)
+        if(self.restaurantList().length === 0)
             return true;
 
         let visible = false;
