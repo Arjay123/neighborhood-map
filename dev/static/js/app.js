@@ -294,6 +294,7 @@ function ViewModel(categories){
                     alert('Could not retrieve default favorites');
                 },
                 complete: function(){
+                    // signal favorites done loading
                     favs_deferred.resolve();
                 }
             });
@@ -340,6 +341,7 @@ function ViewModel(categories){
     });
 }
 
+// used to signal favorites list shown once favorites are loaded on app start
 let favs_deferred = $.Deferred();
 
 // at app start, retrieve list of available categories
