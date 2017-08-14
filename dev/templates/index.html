@@ -121,6 +121,9 @@
             </div>
             <!-- /ko -->
         </div>
+        <!-- ko ifnot: $data.favList || $root.visible_any() -->
+        <div class="text-center"><p>No restaurants in current list available for this filter</p></div>
+        <!-- /ko -->
     </script>
 
 

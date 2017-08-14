@@ -122,7 +122,6 @@ function ViewModel(categories){
 
         let offset = ++self.page * self.listPerPage;
         self.yelpAjax(self.currentCategory, offset);
-        self.yelpAjax(self.currentCategory, offset, self.selectedOption());
 
     };
 
@@ -130,7 +129,7 @@ function ViewModel(categories){
     self.getPrevListings = function(){
 
         let offset = --self.page * self.listPerPage;
-        self.yelpAjax(self.currentCategory, offset, self.selectedOption());
+        self.yelpAjax(self.currentCategory, offset);
 
     };
 
@@ -198,7 +197,7 @@ function ViewModel(categories){
                 // display markers for restaurant in google map
                 clearMarkers();
                 addMarkers(self.restaurantList());
-
+                self.set_visible(self.selectedOption());
                 // set navbar template to restaurant list
                 self.selectedView('restaurants');
 
@@ -313,9 +312,31 @@ function ViewModel(categories){
 
     // selected filter has been changed
     self.selectedOption.subscribe(function(data){
+        self.set_visible(data);
+    });
+
+    // set restaurants as visible based on current price filter
+    self.set_visible = function(option){
         self.restaurantList().forEach(function(restaurant){
-            restaurant.visible(restaurant.price === data || data === self.options()[0]);
+            restaurant.visible(restaurant.price === option || option === self.options()[0]);
         });
+    }
+
+    // get count of visible restaurants
+    self.visible_any = ko.computed(function(){
+
+        // prevent error msg from appearing while loading restaurants
+        if(self.restaurantList().length == 0)
+            return true;
+
+        let visible = false;
+        self.restaurantList().forEach(function(restaurant){
+            if(restaurant.visible()){
+                visible = true;
+                return;
+            }
+        });
+        return visible;
     });
 }
 
