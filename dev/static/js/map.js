@@ -42,47 +42,55 @@ function mapLoadError(){
 // restaurants - list of restaurant objects to create markers for
 //
 function addMarkers(restaurants){
-    // if no restaurants passed, reset to default map view
-    if(restaurants.length == 0){
-        map.setOptions({
-            zoom: DEFAULT_ZOOM,
-            center: SANJOSE_COORD,
-        });
-        return;
-    }
+
+    let show_default = restaurants.length == 0;
 
     // reset map bounds
     bounds = new google.maps.LatLngBounds();
 
     restaurants.forEach(function(restaurant){
 
-        let newMarkers = new google.maps.Marker({
-            position: {lat: restaurant.coordinates.latitude, lng: restaurant.coordinates.longitude },
-            map: map,
-            animation: google.maps.Animation.DROP
-        });
+        show_default = show_default || restaurant.visible;
+        if(restaurant.visible()){
+            let newMarkers = new google.maps.Marker({
+                position: {lat: restaurant.coordinates.latitude, lng: restaurant.coordinates.longitude },
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
 
 
-        newMarkers.addListener('click', function(){
-            showRestaurantWindow(restaurant);
-        });
+            newMarkers.addListener('click', function(){
+                showRestaurantWindow(restaurant);
+            });
 
-        newMarkers.addListener('mouseover', function(){
-            newMarkers.setAnimation(google.maps.Animation.BOUNCE);
-        });
+            newMarkers.addListener('mouseover', function(){
+                newMarkers.setAnimation(google.maps.Animation.BOUNCE);
+            });
 
-        newMarkers.addListener('mouseout', function(){
-            newMarkers.setAnimation(null);
-        });
+            newMarkers.addListener('mouseout', function(){
+                newMarkers.setAnimation(null);
+            });
 
-        // add new marker to list of markers
-        markers[restaurant.id] = newMarkers;
+            // add new marker to list of markers
+            markers[restaurant.id] = newMarkers;
 
-        // extend map bounds to include new marker
-        bounds.extend(newMarkers.position);
+            // extend map bounds to include new marker
+            bounds.extend(newMarkers.position);
+        }
     });
 
-    map.fitBounds(bounds);
+    // if no restaurants, reset to default map view
+    if(show_default){
+        map.setOptions({
+            zoom: DEFAULT_ZOOM,
+            center: SANJOSE_COORD,
+        });
+        return;
+    }
+    else {
+        map.fitBounds(bounds);
+    }
+
 }
 
 // change which marker is currently active

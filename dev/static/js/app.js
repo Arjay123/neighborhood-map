@@ -195,9 +195,8 @@ function ViewModel(categories){
                 });
 
                 // display markers for restaurant in google map
-                clearMarkers();
-                addMarkers(self.restaurantList());
                 self.set_visible(self.selectedOption());
+
                 // set navbar template to restaurant list
                 self.selectedView('restaurants');
 
@@ -321,6 +320,8 @@ function ViewModel(categories){
         self.restaurantList().forEach(function(restaurant){
             restaurant.visible(restaurant.price === option || option === self.options()[0]);
         });
+        clearMarkers();
+        addMarkers(self.restaurantList());
     }
 
     // get count of visible restaurants
