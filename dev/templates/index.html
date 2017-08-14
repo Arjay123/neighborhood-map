@@ -17,87 +17,85 @@
 <body>
 
 
-    <div id="navbar" class="navbar">
-        <div class="navbar-hdr flex-container">
+    <nav id="navbar" class="navbar">
+        <header class="navbar-hdr flex-container">
             <i class="fa fa-globe fa-2x item" aria-hidden="true"></i> <h3 class="text-center flex-item">San Jose Food Map</h3>
-        </div>
-        <div class="line-break"></div>
-        <div class="navbar-content" id="navbar-scroll-div">
-            <div class="navbar-hdr flex-container pointer" data-bind="click: favClick">
+        </header>
+        <section class="line-break"></section>
+        <aside class="navbar-content" id="navbar-scroll-div">
+            <header class="navbar-hdr flex-container pointer" data-bind="click: favClick">
                 <i id="drop-icon" data-bind="css: favMenuIcon" aria-hidden="true"></i><h3 class="flex-item text-center"> Favorites</h3>
-            </div>
-            <div id="favorites" class="navbar-template" data-bind="template: { name: 'restaurants', data: { list: favorites, favList: true } }">
+            </header>
+            <section id="favorites" class="navbar-template" data-bind="template: { name: 'restaurants', data: { list: favorites, favList: true } }">
 
-            </div>
-            <div class="line-break"></div>
+            </section>
+            <section class="line-break"></section>
 
 
 
             <!-- ko if: selectedView() == "restaurants" -->
-            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selectedView, data: { list: restaurantList, favList: false } }"></div>
+            <section id="navbar-half" class="navbar-template" data-bind="template: { name: selectedView, data: { list: restaurantList, favList: false } }"></section>
             <!-- /ko -->
             <!-- ko ifnot: selectedView() == "restaurants" -->
-            <div id="navbar-half" class="navbar-template" data-bind="template: { name: selectedView }"></div>
+            <section id="navbar-half" class="navbar-template" data-bind="template: { name: selectedView }"></section>
             <!-- /ko -->
 
-        </div>
-    </div>
+        </aside>
+    </nav>
 
-    <div class="content">
-        <div class="toggle-hdr">
+    <main class="content">
+        <header class="toggle-hdr">
             <button id="toggle-navbar" class="open" data-bind="click: toggleNavbar"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></button>
-        </div>
-        <div id="map">
+        </header>
+        <section id="map">
 
-        </div>
-    </div>
+        </section>
+    </main>
 
 
 
     <script type="text/html" id="error">
-        <div class="navbar-hdr flex-container">
+        <header class="navbar-hdr flex-container">
             <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.showCat"></i>
             <h5 class="flex-item text-center" data-bind="text: errorMsg"></h5>
-        </div>
+        </header>
     </script>
 
 
     <script type="text/html" id="categories">
-        <div class="text-center">
+        <header class="text-center">
             <h4>Categories</h4>
-        </div>
-        <div class="navbar-menu-items" data-bind="foreach: categoryList">
-            <div class="navbar-menu-item">
-                <h4><span class="pointer" data-bind="text: $data, click: $parent.catClicked"></h4>
-            </div>
-        </div>
+        </header>
+        <section class="navbar-menu-items" data-bind="foreach: categoryList">
+            <h4 class="navbar-menu-item"><span class="pointer" data-bind="text: $data, click: $parent.catClicked"></h4>
+        </section>
     </script>
 
 
     <script type="text/html" id="restaurants">
         <!-- ko ifnot: $data.favList -->
-        <div class="navbar-hdr flex-container">
+        <header class="navbar-hdr flex-container">
             <i class="fa fa-arrow-left fa-2x pointer" aria-hidden="true" data-bind="click: $root.showCat"></i>
             <h4 class="flex-item text-center" data-bind="text: $root.currentCategory "></h4>
             <select data-bind="options: $root.options, value: $root.selectedOption">
             </select>
-        </div>
-        <div class="flex-container">
+        </header>
+        <header class="flex-container">
             <div data-bind="visible: $root.prevAvailable, click: $root.getPrevListings" class="flex-item flex-container ctrl-box pointer">
                 <i class="fa fa-arrow-left" aria-hidden="true" ></i><h4 class="flex-item text-center">Previous 10</h4>
             </div>
             <div data-bind="visible: $root.nextAvailable, click: $root.getNextListings" class="flex-item flex-container ctrl-box pointer">
                 <h4 class="flex-item text-center">Next 10</h4><i class="fa fa-arrow-right" aria-hidden="true"></i>
             </div>
-        </div>
+        </header>
         <!-- /ko -->
-        <div class="navbar-menu-items" data-bind="foreach: list">
+        <section class="navbar-menu-items" data-bind="foreach: list">
             <!-- ko if: visible() || $parent.favList -->
             <div data-bind="visible: ($index() != 0)" class="line-break-partial"></div>
-            <div class="navbar-menu-item restaurant-menu-item">
-                <div class="restaurant flex-container pointer" data-bind="click: $root.restaurantClicked, event: { mouseenter: markerBounceOn, mouseleave: markerBounceOff } ">
+            <article class="navbar-menu-item restaurant-menu-item">
+                <section class="restaurant flex-container pointer" data-bind="click: $root.restaurantClicked, event: { mouseenter: markerBounceOn, mouseleave: markerBounceOff } ">
                     <img class="restaurant-img" data-bind="attr: { src: img }">
-                    <div class="restaurant-details" >
+                    <div class="restaurant-details">
                         <h4 class="restaurant-name" data-bind="text: name">Restaurant name</h4>
                         <div class="restaurant-reviews">
                             <div data-bind="template: { name: getRatingTemplate }"></div>
@@ -106,8 +104,8 @@
                         </div>
                         <p class="address"><span data-bind="text: price"></span> • <span data-bind="text: category"></span></p>
                     </div>
-                </div>
-                <div class="restaurant-controls flex-container">
+                </section>
+                <section class="restaurant-controls flex-container">
                     <div class="flex-item">
                         <span class="pointer" data-bind="click: $root.toggleFavorite">
                             <!-- ko if: $parent.favList -->
@@ -121,12 +119,12 @@
                     <div class="flex-item">
                         <a class="navbar-link" target="_blank" data-bind="attr: { href: url }"><img class="yelp-logo" src="{{url_for('static', filename='img/Yelp_burst_positive.png')}}"> View on Yelp</a>
                     </div>
-                </div>
-            </div>
+                </section>
+            </article>
             <!-- /ko -->
-        </div>
+        </section>
         <!-- ko ifnot: $data.favList || $root.visible_any() -->
-        <div class="text-center"><p>No restaurants in current list available for this filter</p></div>
+        <section class="text-center"><p>No restaurants in current list available for this filter</p></section>
         <!-- /ko -->
     </script>
 
