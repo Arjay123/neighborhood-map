@@ -19,8 +19,12 @@
         </header>
         <section class="line-break"></section>
         <aside class="navbar-content" id="navbar-scroll-div">
-            <header class="navbar-hdr flex-container pointer" data-bind="click: favClick">
-                <i id="drop-icon" data-bind="css: favMenuIcon" aria-hidden="true"></i><h3 class="flex-item text-center"> Favorites</h3>
+            <header class="navbar-hdr flex-container pointer">
+                <section class="flex-item flex-container" data-bind="click: favClick">
+                    <i id="drop-icon" data-bind="css: favMenuIcon" aria-hidden="true"></i>
+                    <h3 class="flex-item text-center"> Favorites</h3>
+                </section>
+                <select data-bind="options: $root.options, value: $root.selectedFavOption"></select>
             </header>
             <section id="favorites" class="navbar-template" data-bind="template: { name: 'restaurants', data: { list: favorites, favList: true } }">
 
@@ -86,7 +90,7 @@
         </header>
         <!-- /ko -->
         <section class="navbar-menu-items" data-bind="foreach: list">
-            <!-- ko if: visible() || $parent.favList -->
+            <!-- ko if: visible() -->
             <section data-bind="visible: ($index() != 0)" class="line-break-partial"></section>
             <article class="navbar-menu-item restaurant-menu-item">
                 <section class="restaurant flex-container pointer" data-bind="click: $root.restaurantClicked, event: { mouseenter: markerBounceOn, mouseleave: markerBounceOff } ">
