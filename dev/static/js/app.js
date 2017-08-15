@@ -89,6 +89,7 @@ function ViewModel(categories){
                                        '$$$',
                                        '$$$$']);
     self.selectedOption = ko.observable(self.options()[0].val); // current selected filter option
+    self.selectedFavOption = ko.observable(self.options()[0].val); // current selected favorite filter
 
 
 
@@ -190,7 +191,9 @@ function ViewModel(categories){
                 });
 
                 // display markers for restaurant in google map
-                self.set_visible(self.selectedOption());
+                clearMarkers();
+                addMarkers(self.restaurantList());
+                self.set_visible(self.selectedOption(), self.restaurantList());
 
                 // set navbar template to restaurant list
                 self.selectedView('restaurants');
@@ -235,8 +238,7 @@ function ViewModel(categories){
         }
 
         if(self.favShown()){
-            clearMarkers();
-            addMarkers(self.favorites());
+            showMarkers(self.favorites());
         }
 
         // store favs in local storage
@@ -253,6 +255,15 @@ function ViewModel(categories){
         showRestaurantWindow(element);
     };
 
+    // set restaurants as visible based on current price filter
+    self.set_visible = function(option, list){
+        list.forEach(function(restaurant){
+            restaurant.visible(restaurant.price === option || option === self.options()[0]);
+        });
+
+        showMarkers(list);
+    };
+
     // favorites tab toggle button click handler
     self.favClick = function(element){
 
@@ -264,17 +275,19 @@ function ViewModel(categories){
         clearMarkers();
         if(self.favShown()){
             addMarkers(self.favorites());
+            self.set_visible(self.selectedFavOption(), self.favorites());
         }
         else {
             addMarkers(self.restaurantList());
+            self.set_visible(self.selectedOption(), self.restaurantList());
         }
     };
+
 
     // show categories
     self.showCat = function(){
         self.restaurantList.removeAll();
         clearMarkers();
-        addMarkers(self.restaurantList());
         self.selectedOption(self.options()[0]);
         self.selectedView('categories');
     };
@@ -323,21 +336,17 @@ function ViewModel(categories){
     // show favorites by default once favorites and google maps api are loaded
     favs_deferred.done(function(){
         self.favClick();
+
+        self.selectedFavOption.subscribe(function(data){
+            self.set_visible(data, self.favorites());
+        });
     });
 
     // selected filter has been changed
     self.selectedOption.subscribe(function(data){
-        self.set_visible(data);
+        self.set_visible(data, self.restaurantList());
     });
 
-    // set restaurants as visible based on current price filter
-    self.set_visible = function(option){
-        self.restaurantList().forEach(function(restaurant){
-            restaurant.visible(restaurant.price === option || option === self.options()[0]);
-        });
-        clearMarkers();
-        addMarkers(self.restaurantList());
-    };
 
     // get count of visible restaurants
     self.visible_any = ko.computed(function(){
